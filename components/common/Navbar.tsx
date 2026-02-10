@@ -38,7 +38,7 @@ export const Navbar: React.FC = () => {
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'glass-effect-dark backdrop-blur-xl border-b border-cyan-500/20'
+          ? 'glass-effect-dark backdrop-blur-xl border-b border-sky-500/20'
           : 'bg-transparent'
       }`}
       initial={{ y: 0, opacity: 1 }}
@@ -56,7 +56,7 @@ export const Navbar: React.FC = () => {
               }}
               className="text-2xl font-bold gradient-text cursor-pointer"
             >
-              Lifted Akinfala
+                Samuel Akinrimisade
             </a>
           </motion.div>
 
@@ -70,7 +70,7 @@ export const Navbar: React.FC = () => {
                   e.preventDefault();
                   scrollToSection(item.href);
                 }}
-                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
+                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-sky-400 transition-colors cursor-pointer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -91,7 +91,7 @@ export const Navbar: React.FC = () => {
                 e.preventDefault();
                 scrollToSection('#contact');
               }}
-              className="hidden sm:inline-block px-6 py-2 bg-gradient-to-r from-cyan-500 to-violet-500 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all cursor-pointer"
+              className="hidden sm:inline-block px-6 py-2 bg-gradient-to-r from-sky-500 to-violet-500 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-sky-500/50 transition-all cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -134,7 +134,7 @@ export const Navbar: React.FC = () => {
               transition={{ duration: 0.3 }}
               className="md:hidden overflow-hidden"
             >
-              <div className="py-6 px-4 space-y-3 border-t border-cyan-500/20 glass-effect-dark bg-gradient-to-b from-slate-900/60 to-slate-950/80 backdrop-blur-lg">
+              <div className="py-6 px-4 space-y-3 border-t border-sky-500/20 glass-effect-dark bg-gradient-to-b from-slate-900/60 to-slate-950/80 backdrop-blur-lg">
                 {siteConfig.navigation.map((item, index) => (
                   <a
                     key={item.href}
@@ -143,7 +143,7 @@ export const Navbar: React.FC = () => {
                       e.preventDefault();
                       scrollToSection(item.href);
                     }}
-                    className="block w-full text-left px-4 py-3 text-sm font-semibold text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/10 rounded-lg transition-all duration-200 border border-transparent hover:border-cyan-500/30 cursor-pointer"
+                    className="block w-full text-left px-4 py-3 text-sm font-semibold text-slate-200 hover:text-sky-300 hover:bg-sky-500/10 rounded-lg transition-all duration-200 border border-transparent hover:border-sky-500/30 cursor-pointer"
                   >
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
@@ -166,7 +166,7 @@ export const Navbar: React.FC = () => {
                       e.preventDefault();
                       scrollToSection('#contact');
                     }}
-                    className="block w-full px-4 py-3 bg-gradient-to-r from-cyan-500 via-violet-500 to-cyan-500 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all text-sm text-center cursor-pointer"
+                    className="block w-full px-4 py-3 bg-gradient-to-r from-sky-500 via-violet-500 to-sky-500 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-sky-500/50 transition-all text-sm text-center cursor-pointer"
                   >
                     Get In Touch
                   </a>
@@ -180,7 +180,7 @@ export const Navbar: React.FC = () => {
       {/* Scroll Indicator */}
       {isScrolled && (
         <motion.div
-          className="h-1 bg-gradient-to-r from-cyan-500 via-violet-500 to-cyan-500"
+          className="h-1 bg-gradient-to-r from-sky-500 via-violet-500 to-sky-500"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 0.5 }}
           style={{ originX: 0 }}
