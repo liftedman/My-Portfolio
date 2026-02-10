@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/Card';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 
-type Category = 'mobile' | 'web' | 'design' | 'backend' | 'all';
+type Category = 'advisory' | 'assessment' | 'training' | 'operations' | 'all';
 
 export const Projects: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
@@ -19,10 +19,10 @@ export const Projects: React.FC = () => {
 
   const categories: Array<{ id: Category; label: string }> = [
     { id: 'all', label: 'All Projects' },
-    { id: 'mobile', label: 'Mobile' },
-    { id: 'web', label: 'Web' },
-    { id: 'design', label: 'Design' },
-    { id: 'backend', label: 'Backend' },
+    { id: 'advisory', label: 'Security Advisory' },
+    { id: 'assessment', label: 'Risk Assessment' },
+    { id: 'training', label: 'Training & Education' },
+    { id: 'operations', label: 'Operations & Governance' },
   ];
 
   const filteredProjects =
@@ -53,7 +53,7 @@ export const Projects: React.FC = () => {
             <span className="gradient-text">Featured Projects</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            Explore my recent work building digital experiences for innovative brands
+            Explore security architecture, risk advisory, and organizational governance projects
           </p>
         </motion.div>
 
@@ -73,7 +73,7 @@ export const Projects: React.FC = () => {
               }}
               className={`px-6 py-2 rounded-full font-semibold transition-all ${
                 selectedCategory === cat.id
-                  ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-lg shadow-cyan-500/50'
+                  ? 'bg-gradient-to-r from-sky-500 to-violet-500 text-white shadow-lg shadow-sky-500/50'
                   : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50'
               }`}
               whileHover={{ scale: 1.05 }}

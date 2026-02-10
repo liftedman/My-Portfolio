@@ -14,22 +14,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Lifted - Full-Stack Developer | Mobile & Web Solutions',
+  title: 'Samuel Akinrimisade - Security Architecture & Risk Advisory',
   description:
-    'Hi, I am Lifted — a passionate Flutter and JavaScript developer. I specialize in building sleek, functional, and scalable digital experiences for fintech, medical, and artisan brands.',
-  keywords: ['developer', 'flutter', 'react', 'javascript', 'mobile', 'web', 'portfolio'],
-  authors: [{ name: 'Lifted' }],
-  creator: 'Lifted',
+    'Akinrimisade Samuel is a trained criminologist and security professional with experience spanning intelligence operations, physical security, organizational risk, governance, and security leadership. He helps organizations understand, structure, and fix their security before incidents happen.',
+  keywords: [
+    'security architecture',
+    'risk advisory',
+    'intelligence operations',
+    'physical security',
+    'governance',
+    'security leadership',
+    'security consulting',
+  ],
+  authors: [{ name: 'Samuel Akinrimisade' }],
+  creator: 'Samuel Akinrimisade',
   openGraph: {
-    title: 'Lifted - Full-Stack Developer',
-    description: 'Building beautiful, functional digital experiences',
+    title: 'Samuel Akinrimisade - Security Architecture & Risk Advisory',
+    description: 'Proactive, system-based security through intelligence and governance',
     type: 'website',
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Lifted - Full-Stack Developer',
-    description: 'Building beautiful, functional digital experiences',
+    title: 'Samuel Akinrimisade - Security Architecture & Risk Advisory',
+    description: 'Proactive, system-based security for organizations',
   },
 };
 
@@ -42,7 +50,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#0f172a" />
+        <meta name="theme-color" content="#0E1116" />
         <script
           dangerouslySetInnerHTML={{
             __html: `

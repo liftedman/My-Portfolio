@@ -1,31 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-  --primary: #00d9ff;
-  --secondary: #a78bfa;
-  --accent: #10b981;
+  --background: #0e1116;
+  --foreground: #eaecee;
+  --primary: #2d9cdb;
+  --secondary: #27ae60;
+  --accent: #9b51e0;
   --danger: #ff6b6b;
 }
 
 /* Light theme variables */
 .light {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --primary: #0891b2;
-  --secondary: #7c3aed;
-  --accent: #059669;
-  --danger: #dc2626;
+  --background: #f7f9fb;
+  --foreground: #1a1d1f;
+  --primary: #2d9cdb;
+  --secondary: #27ae60;
+  --accent: #6c63ff;
+  --danger: #eb5757;
 }
 
 /* Dark theme variables */
 .dark {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-  --primary: #00d9ff;
-  --secondary: #a78bfa;
-  --accent: #10b981;
+  --background: #0e1116;
+  --foreground: #eaecee;
+  --primary: #2d9cdb;
+  --secondary: #27ae60;
+  --accent: #9b51e0;
   --danger: #ff6b6b;
 }
 
@@ -37,7 +37,7 @@
 
   body {
     @apply bg-slate-950 text-slate-50 overflow-x-hidden;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #0f172a 50%, #1a1f35 75%, #0f172a 100%);
+    background: linear-gradient(135deg, #0e1116 0%, #171b21 25%, #0e1116 50%, #141821 75%, #0e1116 100%);
     background-attachment: fixed;
     transition: background 0.3s ease, color 0.3s ease;
   }
@@ -45,7 +45,7 @@
   /* Light mode styles */
   .light body {
     @apply bg-white text-slate-900;
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #ffffff 50%, #f1f5f9 75%, #ffffff 100%);
+    background: linear-gradient(135deg, #f7f9fb 0%, #ffffff 25%, #f7f9fb 50%, #f1f5f9 75%, #f7f9fb 100%);
     background-attachment: fixed;
   }
 
@@ -62,46 +62,46 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-cyan-500 rounded-full;
-    background: linear-gradient(to bottom, #06b6d4, #a78bfa);
+    @apply bg-sky-500 rounded-full;
+    background: linear-gradient(to bottom, #2d9cdb, #9b51e0);
   }
 
   .light ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #0891b2, #7c3aed);
+    background: linear-gradient(to bottom, #2d9cdb, #6c63ff);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-cyan-400;
+    @apply bg-sky-400;
   }
 }
 
 @layer components {
   .gradient-text {
-    @apply bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-sky-500 via-violet-500 to-sky-500 bg-clip-text text-transparent;
   }
 
   .gradient-text-vivid {
-    @apply bg-gradient-to-r from-cyan-400 via-violet-400 via-green-400 to-orange-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-sky-500 via-violet-500 to-emerald-500 bg-clip-text text-transparent;
   }
 
   .bg-gradient-primary {
-    @apply bg-gradient-to-br from-cyan-900/20 via-violet-900/20 to-green-900/20;
+    @apply bg-gradient-to-br from-sky-900/20 via-violet-900/20 to-emerald-900/20;
   }
 
   .bg-gradient-secondary {
-    @apply bg-gradient-to-tr from-slate-900/40 via-purple-900/20 to-slate-900/40;
+    @apply bg-gradient-to-tr from-slate-900/40 via-sky-900/20 to-slate-900/40;
   }
 
   .glow-cyan {
-    box-shadow: 0 0 30px rgba(6, 182, 212, 0.4), 0 0 60px rgba(6, 182, 212, 0.2);
+    box-shadow: 0 0 30px rgba(45, 156, 219, 0.4), 0 0 60px rgba(45, 156, 219, 0.2);
   }
 
   .glow-purple {
-    box-shadow: 0 0 30px rgba(167, 139, 250, 0.4), 0 0 60px rgba(167, 139, 250, 0.2);
+    box-shadow: 0 0 30px rgba(155, 81, 224, 0.4), 0 0 60px rgba(155, 81, 224, 0.2);
   }
 
   .glow-neon {
-    box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), 0 0 60px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 30px rgba(39, 174, 96, 0.4), 0 0 60px rgba(39, 174, 96, 0.2);
   }
 
   .glass-effect {
@@ -135,7 +135,7 @@
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-sky-500 to-violet-500 bg-clip-text text-transparent;
   }
 
   .btn-base {
@@ -146,7 +146,7 @@
     position: relative;
     border-radius: 12px;
     padding: 2px;
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.5), rgba(167, 139, 250, 0.5));
+    background: linear-gradient(135deg, rgba(45, 156, 219, 0.5), rgba(155, 81, 224, 0.5));
   }
 
   .container-gradient-border > * {
@@ -210,10 +210,10 @@
 @keyframes glow-pulse {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5), 0 0 40px rgba(6, 182, 212, 0.3);
+    box-shadow: 0 0 20px rgba(45, 156, 219, 0.5), 0 0 40px rgba(45, 156, 219, 0.3);
   }
   50% {
-    box-shadow: 0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.5);
+    box-shadow: 0 0 30px rgba(45, 156, 219, 0.8), 0 0 60px rgba(45, 156, 219, 0.5);
   }
 }
 

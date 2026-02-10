@@ -28,12 +28,12 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({ className = '', size
     >
       {/* Outer glow ring */}
       <motion.div
-        className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500 via-violet-500 to-green-500 p-1"
+        className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-500 via-violet-500 to-emerald-500 p-1"
         animate={{
           boxShadow: [
-            '0 0 20px rgba(6, 182, 212, 0.4)',
-            '0 0 40px rgba(6, 182, 212, 0.6)',
-            '0 0 20px rgba(6, 182, 212, 0.4)',
+            '0 0 20px rgba(45, 156, 219, 0.4)',
+            '0 0 40px rgba(45, 156, 219, 0.6)',
+            '0 0 20px rgba(45, 156, 219, 0.4)',
           ],
         }}
         transition={{ duration: 3, repeat: Infinity }}
@@ -43,8 +43,8 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({ className = '', size
           {/* Image */}
           <div className="relative w-full h-full rounded-full overflow-hidden">
             <Image
-              src="/images/image.jpeg"
-              alt="Profile Picture"
+              src="/images/samprofile.jpeg"
+              alt="Samuel Akinrimisade"
               width={dimensions.width}
               height={dimensions.height}
               className="w-full h-full object-cover"
@@ -60,7 +60,7 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({ className = '', size
       {[...Array(3)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-2 h-2 bg-cyan-400 rounded-full"
+          className="absolute w-2 h-2 bg-sky-400 rounded-full"
           animate={{
             x: [0, 50 * Math.cos((i * 2 * Math.PI) / 3), 0],
             y: [0, 50 * Math.sin((i * 2 * Math.PI) / 3), 0],

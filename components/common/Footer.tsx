@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative py-12 px-4 sm:px-6 lg:px-8 border-t border-cyan-500/10 mt-20">
+    <footer className="relative py-12 px-4 sm:px-6 lg:px-8 border-t border-sky-500/10 mt-20">
       {/* Background gradient */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent" />
@@ -18,9 +18,9 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {/* Brand */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
-            <h3 className="text-2xl font-bold gradient-text mb-4">Lifted</h3>
+            <h3 className="text-2xl font-bold gradient-text mb-4">Samuel Akinrimisade</h3>
             <p className="text-slate-400 mb-4">
-              Building beautiful, functional digital experiences for innovative brands.
+              Proactive, system-based security through intelligence, governance, and structured operations.
             </p>
           </motion.div>
 
@@ -36,7 +36,7 @@ export const Footer: React.FC = () => {
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className="text-slate-400 hover:text-cyan-400 transition-colors"
+                    className="text-slate-400 hover:text-sky-400 transition-colors"
                   >
                     {item.label}
                   </a>
@@ -59,8 +59,8 @@ export const Footer: React.FC = () => {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-all"
-                  whileHover={{ scale: 1.1, boxShadow: '0 0 20px rgba(6, 182, 212, 0.5)' }}
+                  className="w-10 h-10 flex items-center justify-center rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-all"
+                  whileHover={{ scale: 1.1, boxShadow: '0 0 20px rgba(45, 156, 219, 0.5)' }}
                   whileTap={{ scale: 0.95 }}
                 >
                   {platform.charAt(0).toUpperCase()}
@@ -71,7 +71,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent my-8" />
+        <div className="h-px bg-gradient-to-r from-transparent via-sky-500/30 to-transparent my-8" />
 
         {/* Bottom */}
         <motion.div
@@ -80,9 +80,9 @@ export const Footer: React.FC = () => {
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <p>&copy; {currentYear} Lifted. All rights reserved.</p>
+          <p>&copy; {currentYear} Samuel Akinrimisade. All rights reserved.</p>
           <p>
-            Crafted with <span className="text-red-500">❤️</span> by Lifted
+            Crafted with <span className="text-red-500">❤️</span> by Samuel Akinrimisade
           </p>
         </motion.div>
       </div>

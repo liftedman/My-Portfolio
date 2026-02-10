@@ -1,14 +1,12 @@
 export const siteConfig = {
-  name: 'Lifted',
-  description: 'Full-stack mobile and web developer crafting beautiful, functional digital experiences',
-  author: 'Lifted',
-  email: 'hellodevlifted@gmail.com',
+  name: 'Samuel Akinrimisade',
+  description: 'Security Architecture & Risk Advisory Professional | Intelligence Operations | Organizational Risk & Governance',
+  author: 'Samuel Akinrimisade',
+  email: 'soasecureltd@gmail.com',
   socialLinks: {
-    github: 'https://github.com/liftedman',
-    linkedin: 'https://linkedin.com/in/gbeminiyiakinfala',
-    twitter: 'https://twitter.com',
-    whatsapp: 'https://wa.me/2348134697172',
-    instagram: 'https://instagram.com/official_liftedman',
+    linkedin: 'https://www.linkedin.com/in/samuel-akinrimisade-0a990b35b',
+    instagram: 'https://www.instagram.com/thesamuel_akinrimisade',
+    whatsapp: 'https://wa.me/2348147915691',
   },
   navigation: [
     { label: 'Home', href: '/' },

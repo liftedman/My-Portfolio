@@ -8,43 +8,43 @@ import { skills } from '@/config/skills';
 export const About: React.FC = () => {
   const aboutItems = [
     {
-      title: 'Flutter & Dart Mastery',
-      description: 'Building beautiful, responsive mobile apps for iOS and Android with Dart.',
-      icon: '📱',
+      title: 'Security Architecture',
+      description: 'Designing structured, proactive security systems before incidents expose gaps.',
+      icon: '🏗️',
     },
     {
-      title: 'Web Technologies',
-      description: 'Modern web development with React, Next.js, and JavaScript frameworks.',
-      icon: '🌐',
+      title: 'Risk Intelligence',
+      description: 'Threat analysis, vulnerability assessment, and intelligent risk communication.',
+      icon: '🔍',
     },
     {
-      title: 'Backend Architecture',
-      description: 'Scalable backend solutions with Node.js, Firebase, and databases.',
-      icon: '⚙️',
+      title: 'Organizational Governance',
+      description: 'Building security policies, SOPs, and compliance frameworks that stick.',
+      icon: '📋',
     },
     {
-      title: 'Motion & Design',
-      description: 'Crafting smooth animations and delightful user experiences with Framer Motion.',
-      icon: '✨',
+      title: 'Leadership & Awareness',
+      description: 'Training security-conscious cultures and enabling informed decision-making.',
+      icon: '👥',
     },
   ];
 
   const skillCategories = [
     {
-      name: 'Languages',
-      skills: ['Dart', 'JavaScript', 'TypeScript', 'SQL'],
+      name: 'Security & Risk',
+      skills: ['Physical Security', 'Risk Assessment', 'Threat Analysis', 'Access Control'],
     },
     {
-      name: 'Frameworks',
-      skills: ['Flutter', 'React', 'Next.js', 'Node.js'],
+      name: 'Governance & Ops',
+      skills: ['Policy Development', 'SOPs', 'Compliance', 'Risk Management'],
     },
     {
-      name: 'Databases',
-      skills: ['Firebase', 'Supabase', 'SQL', 'MongoDB'],
+      name: 'Intelligence',
+      skills: ['Threat Intelligence', 'Analysis', 'Reconnaissance', 'Situational Awareness'],
     },
     {
-      name: 'Cloud & Tools',
-      skills: ['Google Cloud', 'Git', 'Docker', 'Figma'],
+      name: 'Leadership',
+      skills: ['Strategic Thinking', 'Training', 'Decision-Making', 'Stakeholder Engagement'],
     },
   ];
 
@@ -68,11 +68,10 @@ export const About: React.FC = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            <span className="gradient-text">About Me</span>
+            <span className="gradient-text">About Samuel</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            Blending technical expertise with creative problem-solving to build digital experiences
-            that matter.
+            Security architect helping organizations understand and fix their security before incidents happen.
           </p>
         </motion.div>
 
@@ -105,7 +104,7 @@ export const About: React.FC = () => {
           viewport={{ once: true }}
           className="mb-16"
         >
-          <h3 className="text-3xl font-bold text-slate-100 mb-8 text-center">Tech Stack</h3>
+          <h3 className="text-3xl font-bold text-slate-100 mb-8 text-center">Core Expertise</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {skillCategories.map((category, idx) => (
@@ -117,7 +116,7 @@ export const About: React.FC = () => {
                 transition={{ delay: idx * 0.1 }}
                 className="glass-effect-dark p-6 rounded-lg"
               >
-                <h4 className="text-cyan-400 font-semibold mb-4 text-center">{category.name}</h4>
+                <h4 className="text-blue-400 font-semibold mb-4 text-center">{category.name}</h4>
                 <div className="flex flex-wrap gap-2 justify-center">
                   {category.skills.map((skill) => (
                     <Badge key={skill} variant="primary" size="sm">
@@ -138,8 +137,7 @@ export const About: React.FC = () => {
           className="text-center"
         >
           <p className="text-slate-400 text-lg">
-            With a passion for clean code, intuitive design, and seamless user experiences, I
-            transform ideas into reality. Let&apos;s build something amazing together.
+            With expertise in criminology, intelligence operations, and security governance, I help organizations transition from reactive protection to proactive, system-based security. Let&apos;s structure your security before incidents happen.
           </p>
         </motion.div>
       </div>

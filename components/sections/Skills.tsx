@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { skillCategories } from '@/config/skills';
+import { skillCategories, skills } from '@/config/skills';
 import { containerVariants, fadeInUp } from '@/lib/animations';
 
 interface SkillIconProps {
@@ -13,32 +13,42 @@ interface SkillIconProps {
 const SkillIcon: React.FC<SkillIconProps> = ({ name, category, level }) => {
   const getIcon = (name: string) => {
     const iconMap: { [key: string]: string } = {
-      Dart: '🎯',
-      JavaScript: '⚡',
-      TypeScript: '📘',
-      SQL: '🗄️',
-      Flutter: '📱',
-      React: '⚛️',
-      'Next.js': '▲',
-      'Node.js': '🟢',
-      Firebase: '🔥',
-      Supabase: '🐘',
-      MySQL: '🐬',
-      MongoDB: '🍃',
-      'Google Cloud': '☁️',
-      Git: '🌳',
-      Docker: '🐳',
-      Figma: '🎨',
+      'Physical Security Architecture': '🛡️',
+      'Security Risk Assessment': '📋',
+      'Threat & Vulnerability Analysis': '🔍',
+      'Access Control & VMS': '🔒',
+      'Background Checks & Screening': '🧾',
+      'Incident Prevention': '🚨',
+      'Security Policy Development': '📑',
+      'Organizational Risk Governance': '🏛️',
+      'Standard Operating Procedures': '🧭',
+      'Compliance & Internal Controls': '✅',
+      'Security Reporting': '📊',
+      'Security Intelligence Gathering': '🛰️',
+      'Information Analysis & Reporting': '🧠',
+      'Situational Awareness': '👁️',
+      'Threat Intelligence': '🧩',
+      'Confidential Data Handling': '🗝️',
+      'VMS Design & Implementation': '🗂️',
+      'Security Process Mapping': '🧬',
+      'Operational Workflow Design': '🧱',
+      'Digital Records & Access': '🗄️',
+      'Strategic Thinking': '♟️',
+      'Leadership & Decision-Making': '🧑‍💼',
+      'Risk Communication': '🗣️',
+      'Stakeholder Engagement': '🤝',
+      'Security Awareness Training': '🎓',
+      'Ethical Judgment': '⚖️',
     };
-    return iconMap[name] || '✨';
+    return iconMap[name] || '🛡️';
   };
 
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'expert':
-        return 'from-cyan-400 to-green-400';
+        return 'from-sky-400 to-violet-500';
       case 'intermediate':
-        return 'from-violet-400 to-cyan-400';
+        return 'from-emerald-400 to-sky-400';
       default:
         return 'from-slate-400 to-slate-500';
     }
@@ -53,7 +63,7 @@ const SkillIcon: React.FC<SkillIconProps> = ({ name, category, level }) => {
       <motion.div
         className={`w-16 h-16 rounded-lg bg-gradient-to-br ${getLevelColor(level)} p-3 flex items-center justify-center text-3xl glow-cyan mb-2 cursor-pointer`}
         animate={{
-          boxShadow: level === 'expert' ? ['0 0 20px rgba(6, 182, 212, 0.5)', '0 0 40px rgba(6, 182, 212, 0.8)', '0 0 20px rgba(6, 182, 212, 0.5)'] : 'none',
+          boxShadow: level === 'expert' ? ['0 0 20px rgba(239, 68, 68, 0.5)', '0 0 40px rgba(239, 68, 68, 0.8)', '0 0 20px rgba(239, 68, 68, 0.5)'] : 'none',
         }}
         transition={{
           duration: 2,
@@ -74,7 +84,7 @@ export const Skills: React.FC = () => {
       {/* Background */}
       <div className="absolute inset-0 -z-10">
         <motion.div
-          className="absolute top-1/3 -left-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"
+          className="absolute top-1/3 -left-40 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl"
           animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
           transition={{ duration: 12, repeat: Infinity }}
         />
@@ -89,11 +99,11 @@ export const Skills: React.FC = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            <span className="gradient-text">Technical Skills</span>
+            <span className="gradient-text">Security Capabilities</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            A comprehensive toolkit of technologies and frameworks I use to build exceptional digital
-            experiences
+            A structured, security-first toolkit covering architecture, intelligence, governance, and
+            leadership
           </p>
         </motion.div>
 
@@ -105,48 +115,17 @@ export const Skills: React.FC = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {skillCategories.map((category) => (
-            <motion.div key={category} variants={fadeInUp} className="flex flex-col items-center">
+          {skillCategories.map((category) => {
+            const categorySkills = skills.filter((skill) => skill.category === category);
+
+            return (
+              <motion.div key={category} variants={fadeInUp} className="flex flex-col items-center">
               <h3 className="text-2xl font-bold text-slate-100 mb-8 text-center gradient-text">
                 {category}
               </h3>
 
-                    <div className="flex flex-wrap justify-center gap-35 mx-auto max-w-5xl">
-                {/* Dynamically render skills - this would normally come from config */}
-                {[
-                  { name: 'Dart', level: 'expert' as const },
-                  { name: 'JavaScript', level: 'expert' as const },
-                  { name: 'TypeScript', level: 'intermediate' as const },
-                  { name: 'SQL', level: 'intermediate' as const },
-                  { name: 'Flutter', level: 'expert' as const },
-                  { name: 'React', level: 'expert' as const },
-                  { name: 'Next.js', level: 'intermediate' as const },
-                  { name: 'Node.js', level: 'intermediate' as const },
-                  { name: 'Firebase', level: 'expert' as const },
-                  { name: 'Supabase', level: 'intermediate' as const },
-                  { name: 'MySQL', level: 'intermediate' as const },
-                  { name: 'MongoDB', level: 'intermediate' as const },
-                  { name: 'Google Cloud', level: 'intermediate' as const },
-                  { name: 'Git', level: 'expert' as const },
-                  { name: 'Docker', level: 'intermediate' as const },
-                  { name: 'Figma', level: 'intermediate' as const },
-                ]
-                  .filter((skill) => {
-                    if (category === 'Languages') {
-                      return ['Dart', 'JavaScript', 'TypeScript', 'SQL'].includes(skill.name);
-                    }
-                    if (category === 'Frameworks') {
-                      return ['Flutter', 'React', 'Next.js', 'Node.js'].includes(skill.name);
-                    }
-                    if (category === 'Databases') {
-                      return ['Firebase', 'Supabase', 'MySQL', 'MongoDB'].includes(skill.name);
-                    }
-                    if (category === 'Cloud & Tools') {
-                      return ['Google Cloud', 'Git', 'Docker', 'Figma'].includes(skill.name);
-                    }
-                    return false;
-                  })
-                  .map((skill) => (
+              <div className="flex flex-wrap justify-center gap-6 mx-auto max-w-6xl">
+                {categorySkills.map((skill) => (
                     <motion.div
                       key={skill.name}
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -163,7 +142,8 @@ export const Skills: React.FC = () => {
                   ))}
               </div>
             </motion.div>
-          ))}
+          );
+          })}
         </motion.div>
 
         {/* Legend */}
@@ -176,14 +156,14 @@ export const Skills: React.FC = () => {
           <h4 className="text-lg font-semibold text-slate-200 mb-4 text-center">Proficiency Legend</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 place-items-center">
             <div className="flex items-center gap-3 justify-center">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-400 to-green-400 glow-cyan" />
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-sky-400 to-violet-500 glow-cyan" />
               <div>
                 <p className="font-semibold text-slate-200">Expert</p>
                 <p className="text-sm text-slate-400">Advanced proficiency</p>
               </div>
             </div>
             <div className="flex items-center gap-3 justify-center">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-violet-400 to-cyan-400" />
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-400 to-sky-400" />
               <div>
                 <p className="font-semibold text-slate-200">Intermediate</p>
                 <p className="text-sm text-slate-400">Good working knowledge</p>

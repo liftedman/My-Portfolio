@@ -19,7 +19,7 @@ const Particles: React.FC<{ mousePosition: { x: number; y: number } }> = ({
       {particles.map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-2 h-2 bg-gradient-to-r from-cyan-400 to-violet-400 rounded-full blur-sm"
+          className="absolute w-2 h-2 bg-gradient-to-r from-sky-400 to-violet-400 rounded-full blur-sm"
           animate={{
             x: [mousePosition.x, mousePosition.x + Math.random() * 100 - 50],
             y: [mousePosition.y, mousePosition.y + Math.random() * 100 - 50],
@@ -49,7 +49,7 @@ export const Hero: React.FC = () => {
       {/* Animated background gradient */}
       <div className="absolute inset-0 -z-10">
         <motion.div
-          className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full mix-blend-multiply filter blur-3xl"
+          className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/20 rounded-full mix-blend-multiply filter blur-3xl"
           animate={{
             y: [0, 100, 0],
             x: [0, 50, 0],
@@ -73,7 +73,7 @@ export const Hero: React.FC = () => {
           }}
         />
         <motion.div
-          className="absolute top-1/2 right-1/3 w-96 h-96 bg-green-500/10 rounded-full mix-blend-multiply filter blur-3xl"
+          className="absolute top-1/2 right-1/3 w-96 h-96 bg-emerald-500/10 rounded-full mix-blend-multiply filter blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
           }}
@@ -102,8 +102,8 @@ export const Hero: React.FC = () => {
 
         {/* Animated badge */}
         <motion.div className="mb-8 flex justify-center" variants={fadeInDown}>
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20">
-            <span className="text-cyan-400 text-sm font-semibold">Welcome to My Portfolio</span>
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-sky-500/10 border border-sky-500/20">
+            <span className="text-sky-400 text-sm font-semibold">Security Architecture & Risk Advisory</span>
           </div>
         </motion.div>
 
@@ -112,21 +112,29 @@ export const Hero: React.FC = () => {
           className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
           variants={fadeInUp}
         >
-          <span className="gradient-text-vivid">Crafting Future-Ready</span>
+          <span className="gradient-text-vivid">Building Proactive,</span>
           <br />
-          <span className="text-slate-100">Mobile & Web Experiences</span>
+          <span className="text-slate-100">System-Based Security</span>
         </motion.h1>
 
         {/* Subheading */}
-        <motion.p
-          className="text-lg sm:text-xl text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed"
+        <motion.div
+          className="text-lg sm:text-xl text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed space-y-4"
           variants={fadeInUp}
         >
-          Hi, I'm <span className="gradient-text font-semibold">Gbeminiyi Akinfala</span> and you can call me <span className="gradient-text font-semibold">Lifted</span> — a passionate
-          Flutter and JavaScript developer. I specialize in building sleek, functional, and
-          scalable digital experiences for fintech, medical, and artisan brands. My goal is to
-          blend motion, beauty, and logic to create apps people love to use.
-        </motion.p>
+          <p className="font-medium">
+            I'm Samuel Akinrimisade, a trained criminologist and security professional with experience spanning 
+            <span className="text-slate-100"> intelligence operations, physical security, organizational risk, governance, and security leadership</span>.
+          </p>
+          <p>
+            I help organizations understand, structure, and fix their security before incidents happen—bridging 
+            traditional physical security, intelligence, and structured systems to enable proactive, system-based protection.
+          </p>
+          <p className="text-slate-400 text-base">
+            Founder of <span className="text-sky-400 font-semibold">SOA Secure Ltd</span>, a security advisory firm 
+            built on the philosophy of Structured Security for Organizations.
+          </p>
+        </motion.div>
 
         {/* CTA Buttons */}
         <motion.div
@@ -162,10 +170,36 @@ export const Hero: React.FC = () => {
             variant="ghost"
             size="lg"
             onClick={() => {
-              // Download resume logic here
+              // Download both documents
+              const documents = [
+                '/documents/samuel.akinrimisade-Strategic-Leadership-Course-Certificate-London-School-of-Business-Administrati.pdf',
+                '/documents/certificate-sam.pdf'
+              ];
+              
+              documents.forEach((doc, index) => {
+                setTimeout(() => {
+                  const link = document.createElement('a');
+                  link.href = doc;
+                  link.download = doc.split('/').pop() || 'document.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }, index * 300); // Stagger downloads by 300ms
+              });
             }}
           >
-            Download Résumé
+            Download Certificates
+          </Button>
+
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => {
+              // Preview both documents on a single page
+              window.open('/documents', '_blank', 'noopener,noreferrer');
+            }}
+          >
+            View Certificates
           </Button>
         </motion.div>
 
@@ -176,9 +210,9 @@ export const Hero: React.FC = () => {
           transition={{ duration: 2, repeat: Infinity }}
           variants={fadeInUp}
         >
-          <div className="w-6 h-10 border-2 border-cyan-400 rounded-full flex items-center justify-center">
+          <div className="w-6 h-10 border-2 border-sky-400 rounded-full flex items-center justify-center">
             <motion.div
-              className="w-1 h-2 bg-cyan-400 rounded-full"
+              className="w-1 h-2 bg-sky-400 rounded-full"
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             />
