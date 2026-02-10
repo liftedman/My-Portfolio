@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { 
           message: 'Message sent successfully! We will get back to you soon.',
-          id: data && typeof data === 'object' && 'data' in data ? data.data?.id : undefined
+          id: data && typeof data === 'object' && 'data' in data ? (data as any).data?.id : undefined
         },
         { status: 200 }
       );
