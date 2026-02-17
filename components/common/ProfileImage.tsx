@@ -43,7 +43,7 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({ className = '', size
           {/* Image */}
           <div className="relative w-full h-full rounded-full overflow-hidden">
             <Image
-              src="/images/image.jpeg"
+              src="/images/profile.jpeg"
               alt="Profile Picture"
               width={dimensions.width}
               height={dimensions.height}
