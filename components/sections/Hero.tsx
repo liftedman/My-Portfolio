@@ -162,8 +162,17 @@ export const Hero: React.FC = () => {
             variant="ghost"
             size="lg"
             onClick={() => {
-              // Download resume logic here
+              window.open('/documents/flutter_dev.pdf', '_blank', 'noopener,noreferrer');
             }}
+            // onClick={() => {
+            //   // Professional download logic for the CV
+            //   const link = document.createElement('a');
+            //   link.href = '/documents/flutter_dev.pdf';
+            //   link.download = 'Lifted_Akinfala_CV.pdf';
+            //   document.body.appendChild(link);
+            //   link.click();
+            //   document.body.removeChild(link);
+            // }}
           >
             Download Résumé
           </Button>
