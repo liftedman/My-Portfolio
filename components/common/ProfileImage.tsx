@@ -28,7 +28,7 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({ className = '', size
     >
       {/* Outer glow ring */}
       <motion.div
-        className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500 via-violet-500 to-green-500 p-1"
+        className="absolute inset-0 rounded-full bg-linear-to-br from-cyan-500 via-violet-500 to-green-500 p-1"
         animate={{
           boxShadow: [
             '0 0 20px rgba(6, 182, 212, 0.4)',
@@ -43,7 +43,7 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({ className = '', size
           {/* Image */}
           <div className="relative w-full h-full rounded-full overflow-hidden">
             <Image
-              src="/images/image.jpeg"
+              src="/images/profile.jpeg"
               alt="Profile Picture"
               width={dimensions.width}
               height={dimensions.height}
