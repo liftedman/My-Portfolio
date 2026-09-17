@@ -230,3 +230,19 @@
 * {
   @apply transition-colors duration-300;
 }
+
+/*
+ * Respect the OS-level "reduce motion" setting.
+ * framer-motion is handled separately via <MotionConfig reducedMotion="user">;
+ * this covers the CSS keyframe animations and transitions above.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

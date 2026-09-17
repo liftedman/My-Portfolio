@@ -103,7 +103,7 @@ export const Hero: React.FC = () => {
         {/* Animated badge */}
         <motion.div className="mb-8 flex justify-center" variants={fadeInDown}>
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20">
-            <span className="text-cyan-400 text-sm font-semibold">Welcome to My Portfolio</span>
+            <span className="text-cyan-400 text-sm font-semibold">Software Engineer</span>
           </div>
         </motion.div>
 
@@ -112,9 +112,9 @@ export const Hero: React.FC = () => {
           className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
           variants={fadeInUp}
         >
-          <span className="gradient-text-vivid">Crafting Future-Ready</span>
+          <span className="gradient-text-vivid">Flutter &amp; Next.js</span>
           <br />
-          <span className="text-slate-100">Mobile & Web Experiences</span>
+          <span className="text-slate-100">developer</span>
         </motion.h1>
 
         {/* Subheading */}
@@ -122,10 +122,10 @@ export const Hero: React.FC = () => {
           className="text-lg sm:text-xl text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed"
           variants={fadeInUp}
         >
-          Hi, I'm <span className="gradient-text font-semibold">Gbeminiyi Akinfala</span> and you can call me <span className="gradient-text font-semibold">Lifted</span> — a passionate
-          Flutter and JavaScript developer. I specialize in building sleek, functional, and
-          scalable digital experiences for fintech, medical, and artisan brands. My goal is to
-          blend motion, beauty, and logic to create apps people love to use.
+          I&apos;m <span className="gradient-text font-semibold">Gbeminiyi Akinfala</span> —{' '}
+          <span className="gradient-text font-semibold">Lifted</span>. I build mobile and web
+          products for fintech, healthcare and marketplace clients: Flutter apps on iOS and
+          Android, and Next.js platforms with real-time data. Five shipped since 2024.
         </motion.p>
 
         {/* CTA Buttons */}

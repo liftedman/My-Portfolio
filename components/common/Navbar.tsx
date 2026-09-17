@@ -2,7 +2,9 @@
 
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { siteConfig } from '@/config/constants';
+import { scrollBehavior } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
 
 export const Navbar: React.FC = () => {
@@ -21,7 +23,7 @@ export const Navbar: React.FC = () => {
     setIsMobileMenuOpen(false);
 
     if (href === '/' || href === '') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
       return;
     }
 
@@ -29,7 +31,7 @@ export const Navbar: React.FC = () => {
     setTimeout(() => {
       const element = document.getElementById(sectionId);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        element.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
       }
     }, 100);
   }
@@ -48,7 +50,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <a
+            <Link
               href="/"
               onClick={(e) => {
                 e.preventDefault();
@@ -57,7 +59,7 @@ export const Navbar: React.FC = () => {
               className="text-2xl font-bold gradient-text cursor-pointer"
             >
               Lifted Akinfala
-            </a>
+            </Link>
           </motion.div>
 
           {/* Navigation Items - Desktop */}

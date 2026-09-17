@@ -1,3 +1,17 @@
+/**
+ * Canonical origin, used for sitemap, robots and absolute OG image URLs.
+ * Set NEXT_PUBLIC_SITE_URL to the real domain in production — without it,
+ * Vercel's per-deployment URL is used, which changes on every deploy.
+ */
+export const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : '') ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '') ||
+  'http://localhost:3000'
+).replace(/\/$/, '');
+
 export const siteConfig = {
   name: 'Lifted',
   description: 'Full-stack mobile and web developer crafting beautiful, functional digital experiences',

@@ -104,10 +104,10 @@ export const Contact: React.FC = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            <span className="gradient-text">Let's Build Something Amazing</span>
+            <span className="gradient-text">Let&apos;s Build Something Amazing</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            Have a project in mind? Let's collaborate and create something extraordinary together.
+            Have a project in mind? Let&apos;s collaborate and create something extraordinary together.
           </p>
         </motion.div>
 
@@ -191,7 +191,7 @@ export const Contact: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
-                  Thanks for reaching out! I'll get back to you soon.
+                  Thanks for reaching out! I&apos;ll get back to you soon.
                 </motion.p>
               )}
             </form>
@@ -283,7 +283,7 @@ export const Contact: React.FC = () => {
               />
               
               <p className="text-slate-300 text-center relative z-10 leading-relaxed">
-                Whether you have a question or a project idea, feel free to reach out. I'd love to
+                Whether you have a question or a project idea, feel free to reach out. I&apos;d love to
                 hear from you!
               </p>
             </motion.div>

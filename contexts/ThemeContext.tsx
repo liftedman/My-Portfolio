@@ -11,29 +11,42 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+/** Keep in sync with the pre-paint theme script in app/layout.tsx. */
+const STORAGE_KEY = 'theme';
+
+function readStoredTheme(): Theme {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  } catch {
+    // localStorage can throw in private/blocked-storage modes.
+    return 'dark';
+  }
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark');
   const [mounted, setMounted] = useState(false);
 
+  // Adopt whatever the pre-paint script already resolved, so state matches the DOM.
   useEffect(() => {
+    setTheme(readStoredTheme());
     setMounted(true);
-    // Check localStorage for saved theme
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
-    }
   }, []);
 
+  // Gated on `mounted` so the initial default can't clobber a saved choice.
   useEffect(() => {
-    if (mounted) {
-      const root = document.documentElement;
-      root.classList.remove('light', 'dark');
-      root.classList.add(theme);
-      localStorage.setItem('theme', theme);
+    if (!mounted) return;
+
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+
+    try {
+      localStorage.setItem(STORAGE_KEY, theme);
+    } catch {
+      // Persisting the preference is best-effort.
     }
   }, [theme, mounted]);
 
@@ -41,10 +54,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  if (!mounted) {
-    return null;
-  }
-
+  // Always render children: returning null here blanked the entire server-rendered
+  // page, so crawlers and link previews saw an empty document.
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}

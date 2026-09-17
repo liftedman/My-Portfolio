@@ -57,7 +57,7 @@ export const Testimonials: React.FC = () => {
             <span className="gradient-text">What Others Say</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            Feedback from amazing people I've had the pleasure of working with
+            Feedback from amazing people I&apos;ve had the pleasure of working with
           </p>
         </motion.div>
 
@@ -101,7 +101,7 @@ export const Testimonials: React.FC = () => {
 
                   {/* Quote */}
                   <blockquote className="text-xl sm:text-2xl text-slate-100 mb-8 leading-relaxed">
-                    "{testimonials[activeIndex].content}"
+                    &ldquo;{testimonials[activeIndex].content}&rdquo;
                   </blockquote>
 
                   {/* Author */}
