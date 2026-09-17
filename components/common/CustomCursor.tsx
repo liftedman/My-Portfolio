@@ -8,6 +8,16 @@ export const CustomCursor: React.FC = () => {
   const mousePosition = useMousePosition();
   const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
+
+  // Only for pointer devices, and only when motion is welcome: with reduced
+  // motion the trailing spring is disabled, so the cursor would jump instead
+  // of follow — worse than leaving the native cursor alone.
+  useEffect(() => {
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setIsEnabled(finePointer && !reducedMotion);
+  }, []);
 
   useEffect(() => {
     const handleMouseEnter = () => setIsVisible(true);
@@ -32,7 +42,7 @@ export const CustomCursor: React.FC = () => {
     };
   }, []);
 
-  if (!isVisible) return null;
+  if (!isEnabled || !isVisible) return null;
 
   return (
     <>

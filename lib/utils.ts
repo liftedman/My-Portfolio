@@ -6,17 +6,28 @@ export const cn = (...classes: (string | undefined | null | false)[]): string =>
   return classes.filter(Boolean).join(' ');
 };
 
+/**
+ * True when the visitor has asked their OS to reduce motion.
+ * JS-driven scrolling ignores the CSS media query, so it has to be checked here.
+ */
+export const prefersReducedMotion = (): boolean =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+export const scrollBehavior = (): ScrollBehavior =>
+  prefersReducedMotion() ? 'auto' : 'smooth';
+
 export const smoothScroll = (elementId: string) => {
   const element = document.getElementById(elementId);
   if (element) {
     element.scrollIntoView({
-      behavior: 'smooth',
+      behavior: scrollBehavior(),
       block: 'start',
     });
   }
 };
 
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: never[]) => unknown>(
   func: T,
   delay: number
 ): ((...args: Parameters<T>) => void) => {
@@ -27,7 +38,7 @@ export const debounce = <T extends (...args: any[]) => any>(
   };
 };
 
-export const throttle = <T extends (...args: any[]) => any>(
+export const throttle = <T extends (...args: never[]) => unknown>(
   func: T,
   limit: number
 ): ((...args: Parameters<T>) => void) => {
