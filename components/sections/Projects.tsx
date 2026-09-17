@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { projects } from '@/config/projects';
 import { fadeInUp, containerVariants } from '@/lib/animations';
 import { Badge } from '@/components/ui/Badge';
@@ -113,6 +114,14 @@ export const Projects: React.FC = () => {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300" />
+
+                  {/* Status marker — only for projects that are no longer publicly hosted */}
+                  {project.status !== 'live' && (
+                    <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1.5 rounded-full border border-slate-400/30 bg-slate-900/80 px-3 py-1 text-xs font-medium text-slate-300 backdrop-blur-sm">
+                      <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                      {project.status === 'archived' ? 'Archived' : 'Private'}
+                    </span>
+                  )}
                 </div>
 
                 {/* Content */}
@@ -147,6 +156,15 @@ export const Projects: React.FC = () => {
                 >
                   View Details →
                 </motion.button>
+
+                {/* Shareable, indexable write-up */}
+                <Link
+                  href={`/projects/${project.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="mt-2 block text-center text-sm font-medium text-slate-400 transition-colors hover:text-cyan-400"
+                >
+                  Read full case study
+                </Link>
               </Card>
             </motion.div>
           ))}
@@ -286,22 +304,45 @@ export const Projects: React.FC = () => {
               </ul>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-4 pt-4">
-              {selectedProject.link && (
-                <a href={selectedProject.link} target="_blank" rel="noopener noreferrer">
-                  <Button variant="primary" size="md">
-                    Visit Project
-                  </Button>
-                </a>
+            {/* Action buttons, or an honest note when there is nothing to link to */}
+            <div className="pt-4">
+              {selectedProject.status === 'live' && selectedProject.link ? (
+                <div className="flex flex-wrap gap-4">
+                  <a href={selectedProject.link} target="_blank" rel="noopener noreferrer">
+                    <Button variant="primary" size="md">
+                      Visit Project
+                    </Button>
+                  </a>
+                  {selectedProject.github && (
+                    <a href={selectedProject.github} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="md">
+                        View Code
+                      </Button>
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <div className="rounded-lg border border-slate-700/60 bg-slate-800/40 p-4">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                    <span className="text-sm font-semibold text-slate-300">
+                      {selectedProject.status === 'archived'
+                        ? 'Archived client project'
+                        : 'Private client project'}
+                    </span>
+                  </div>
+                  <p className="text-sm leading-relaxed text-slate-400">
+                    {selectedProject.statusNote}
+                  </p>
+                </div>
               )}
-              {selectedProject.github && (
-                <a href={selectedProject.github} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="md">
-                    View Code
-                  </Button>
-                </a>
-              )}
+
+              <Link
+                href={`/projects/${selectedProject.id}`}
+                className="mt-4 inline-flex items-center gap-2 font-semibold text-cyan-400 transition-colors hover:text-cyan-300"
+              >
+                Read full case study <span aria-hidden="true">→</span>
+              </Link>
             </div>
           </div>
         )}
