@@ -1,34 +1,39 @@
 'use client';
 
 import { Navbar } from '@/components/common/Navbar';
-import { CustomCursor } from '@/components/common/CustomCursor';
 import { Footer } from '@/components/common/Footer';
 import { KeyboardShortcutsGuide } from '@/components/common/KeyboardShortcutsGuide';
+import { Preloader } from '@/components/motion/Preloader';
 import { Hero } from '@/components/sections/Hero';
+import { TechBand } from '@/components/sections/TechBand';
 import { About } from '@/components/sections/About';
 import { Projects } from '@/components/sections/Projects';
 import { Skills } from '@/components/sections/Skills';
 import { Experience } from '@/components/sections/Experience';
 import { Testimonials } from '@/components/sections/Testimonials';
 import { Contact } from '@/components/sections/Contact';
+import { IntroProvider } from '@/contexts/IntroContext';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 export default function Home() {
   useKeyboardShortcuts();
 
   return (
-    <main className="min-h-screen bg-slate-950 dark:bg-slate-950 light:bg-white">
-      <CustomCursor />
+    <IntroProvider>
+      <Preloader />
       <Navbar />
-      <Hero />
-      <About />
-      <Projects />
-      <Skills />
-      <Experience />
-      <Testimonials />
-      <Contact />
+      <main className="relative">
+        <Hero />
+        <TechBand />
+        <About />
+        <Projects />
+        <Skills />
+        <Experience />
+        <Testimonials />
+        <Contact />
+      </main>
       <Footer />
       <KeyboardShortcutsGuide />
-    </main>
+    </IntroProvider>
   );
 }
