@@ -1,91 +1,84 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 import { siteConfig } from '@/config/constants';
+import { smoothScroll } from '@/lib/utils';
+import { Magnetic } from '@/components/motion/primitives';
 
 export const Footer: React.FC = () => {
-  const currentYear = new Date().getFullYear();
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
+  // The wordmark rises into place as the footer comes into view.
+  const wordY = useTransform(scrollYProgress, [0, 1], ['45%', '0%']);
 
   return (
-    <footer className="relative py-12 px-4 sm:px-6 lg:px-8 border-t border-cyan-500/10 mt-20">
-      {/* Background gradient */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent" />
-      </div>
-
-      <div className="max-w-7xl mx-auto">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {/* Brand */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
-            <h3 className="text-2xl font-bold gradient-text mb-4">Lifted</h3>
-            <p className="text-slate-400 mb-4">
-              Building beautiful, functional digital experiences for innovative brands.
-            </p>
-          </motion.div>
-
-          {/* Quick Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <h4 className="text-lg font-semibold text-slate-200 mb-4">Quick Links</h4>
+    <footer ref={ref} className="relative overflow-hidden border-t border-line pt-16">
+      <div className="shell">
+        <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
+          <div>
+            <p className="eyebrow mb-4">Navigate</p>
             <ul className="space-y-2">
-              {siteConfig.navigation.map((item) => (
-                <li key={item.href}>
+              {siteConfig.navigation
+                .filter((item) => item.href.startsWith('#'))
+                .map((item) => (
+                  <li key={item.href}>
+                    <a href={item.href} className="text-muted transition-colors hover:text-fg">
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="eyebrow mb-4">Elsewhere</p>
+            <ul className="space-y-2">
+              {Object.entries(siteConfig.socialLinks).map(([platform, url]) => (
+                <li key={platform}>
                   <a
-                    href={item.href}
-                    className="text-slate-400 hover:text-cyan-400 transition-colors"
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="capitalize text-muted transition-colors hover:text-fg"
                   >
-                    {item.label}
+                    {platform}
                   </a>
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
 
-          {/* Social Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h4 className="text-lg font-semibold text-slate-200 mb-4">Connect</h4>
-            <div className="flex gap-4">
-              {Object.entries(siteConfig.socialLinks).map(([platform, url]) => (
-                <motion.a
-                  key={platform}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-all"
-                  whileHover={{ scale: 1.1, boxShadow: '0 0 20px rgba(6, 182, 212, 0.5)' }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {platform.charAt(0).toUpperCase()}
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
+          <div className="col-span-2 flex items-center justify-between gap-6 sm:col-span-1 sm:flex-col sm:items-end">
+            <a href={`mailto:${siteConfig.email}`} className="text-muted transition-colors hover:text-fg">
+              {siteConfig.email}
+            </a>
+            <Magnetic>
+              <button
+                type="button"
+                onClick={() => smoothScroll('')}
+                className="btn-circle h-14! w-14!"
+                aria-label="Back to top"
+              >
+                ↑
+              </button>
+            </Magnetic>
+          </div>
         </div>
 
-        {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent my-8" />
-
-        {/* Bottom */}
-        <motion.div
-          className="flex flex-col sm:flex-row items-center justify-between text-sm text-slate-400"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <p>&copy; {currentYear} Lifted. All rights reserved.</p>
-          <p>
-            Crafted with <span className="text-red-500">❤️</span> by Lifted
-          </p>
-        </motion.div>
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-line py-6 sm:mt-14 font-mono text-[11px] uppercase tracking-[0.15em] text-faint">
+          <span>© {new Date().getFullYear()} Gbeminiyi Akinfala</span>
+          <span>Designed &amp; built by Lifted</span>
+        </div>
       </div>
+
+      <motion.p
+        className="font-display-tight pointer-events-none select-none whitespace-nowrap text-center text-[27vw] leading-[0.75] text-fg"
+        style={{ y: wordY }}
+        aria-hidden="true"
+      >
+        Lifted<span className="text-accent">.</span>
+      </motion.p>
     </footer>
   );
 };

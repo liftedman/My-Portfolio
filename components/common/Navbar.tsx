@@ -1,193 +1,215 @@
 'use client';
 
-import { motion, useScroll, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { siteConfig } from '@/config/constants';
-import { scrollBehavior } from '@/lib/utils';
+import { getLenis } from '@/lib/lenis';
+import { smoothScroll } from '@/lib/utils';
+import { useIntro } from '@/contexts/IntroContext';
+import { Magnetic } from '@/components/motion/primitives';
 import { ThemeToggle } from './ThemeToggle';
 
+const links = siteConfig.navigation.filter((item) => item.href.startsWith('#'));
+
 export const Navbar: React.FC = () => {
+  const { ready } = useIntro();
   const { scrollY } = useScroll();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [active, setActive] = useState<string | null>(null);
 
+  // Tuck the bar away while reading downwards; bring it back on any upward scroll.
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    setScrolled(latest > 40);
+    setHidden(latest > previous && latest > 400 && !menuOpen);
+  });
+
+  // Track which section is under the middle of the viewport.
   useEffect(() => {
-    const unsubscribe = scrollY.on('change', (latest) => {
-      setIsScrolled(latest > 50);
-    });
-    return () => unsubscribe();
-  }, [scrollY]);
+    const sections = links
+      .map((item) => document.getElementById(item.href.slice(1)))
+      .filter((el): el is HTMLElement => !!el);
 
-  const scrollToSection = (href: string) => {
-    setIsMobileMenuOpen(false);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(`#${entry.target.id}`);
+        });
+      },
+      { rootMargin: '-45% 0px -50% 0px' }
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
 
-    if (href === '/' || href === '') {
-      window.scrollTo({ top: 0, behavior: scrollBehavior() });
-      return;
+  // Freeze the page behind the full-screen mobile menu.
+  useEffect(() => {
+    const lenis = getLenis();
+    if (menuOpen) {
+      lenis?.stop();
+      document.body.style.overflow = 'hidden';
+    } else {
+      lenis?.start();
+      document.body.style.overflow = '';
     }
+  }, [menuOpen]);
 
-    const sectionId = href.replace('#', '');
-    setTimeout(() => {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
-      }
-    }, 100);
-  }
+  const go = (href: string) => {
+    setMenuOpen(false);
+    smoothScroll(href.replace('#', ''));
+  };
 
   return (
-    <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'glass-effect-dark backdrop-blur-xl border-b border-cyan-500/20'
-          : 'bg-transparent'
-      }`}
-      initial={{ y: 0, opacity: 1 }}
-      animate={{ y: 0, opacity: 1 }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link
-              href="/"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection('/');
-              }}
-              className="text-2xl font-bold gradient-text cursor-pointer"
-            >
-              Lifted Akinfala
-            </Link>
-          </motion.div>
+    <>
+      <motion.header
+        className="fixed inset-x-0 top-0 z-50"
+        initial={{ y: -100 }}
+        animate={{ y: ready && !hidden ? 0 : -100 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="shell flex h-20 items-center justify-between gap-4">
+          {/* Wordmark */}
+          <Link
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              go('');
+            }}
+            className="group relative z-10 flex items-center gap-2 font-display text-xl font-bold tracking-tight"
+            aria-label="Lifted — back to top"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-fg text-sm text-bg transition-transform duration-500 group-hover:rotate-360">
+              L
+            </span>
+            <span className="hidden sm:inline">
+              Lifted<span className="text-accent-ink">.</span>
+            </span>
+          </Link>
 
-          {/* Navigation Items - Desktop */}
-          <div className="hidden md:flex items-center space-x-1">
-            {siteConfig.navigation.map((item) => (
-              <motion.a
-                key={item.href}
-                href={item.href}
+          {/* Desktop pill */}
+          <nav
+            className={`liquid-glass hidden items-center rounded-full p-1.5 transition-shadow duration-500 lg:flex ${
+              scrolled ? '' : 'shadow-none!'
+            }`}
+            aria-label="Primary"
+          >
+            {links.map((item) => {
+              const isActive = active === item.href;
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    go(item.href);
+                  }}
+                  className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300 ${
+                    isActive ? 'text-on-accent' : 'text-muted hover:text-fg'
+                  }`}
+                  aria-current={isActive ? 'true' : undefined}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active"
+                      className="absolute inset-0 rounded-full bg-accent"
+                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative">{item.label}</span>
+                </a>
+              );
+            })}
+          </nav>
+
+          <div className="relative z-10 flex items-center gap-3">
+            <ThemeToggle />
+            <Magnetic className="hidden sm:inline-block">
+              <a
+                href="#contact"
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollToSection(item.href);
+                  go('#contact');
                 }}
-                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="btn-pill solid py-3!"
               >
-                {item.label}
-              </motion.a>
-            ))}
-          </div>
+                <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-on-accent" />
+                Let&apos;s talk
+              </a>
+            </Magnetic>
 
-          {/* Right Side - Theme Toggle & Mobile Menu */}
-          <div className="flex items-center gap-4">
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
-            {/* CTA Button - Hidden on mobile */}
-            <motion.a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection('#contact');
-              }}
-              className="hidden sm:inline-block px-6 py-2 bg-gradient-to-r from-cyan-500 to-violet-500 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all cursor-pointer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Get In Touch
-            </motion.a>
-
-            {/* Mobile Menu Button */}
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-slate-300 hover:text-white transition-colors"
-              aria-label="Toggle menu"
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              className="btn-circle lg:hidden"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
             >
-              <motion.svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 text-slate-300"
-                animate={isMobileMenuOpen ? { rotate: 90 } : { rotate: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              <span className="relative block h-3 w-5">
+                <span
+                  className={`absolute left-0 h-[1.5px] w-full bg-current transition-all duration-300 ${
+                    menuOpen ? 'top-1/2 rotate-45' : 'top-0'
+                  }`}
                 />
-              </motion.svg>
+                <span
+                  className={`absolute left-0 h-[1.5px] w-full bg-current transition-all duration-300 ${
+                    menuOpen ? 'top-1/2 -rotate-45' : 'top-full'
+                  }`}
+                />
+              </span>
             </button>
           </div>
         </div>
+      </motion.header>
 
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:hidden overflow-hidden"
-            >
-              <div className="py-6 px-4 space-y-3 border-t border-cyan-500/20 glass-effect-dark bg-gradient-to-b from-slate-900/60 to-slate-950/80 backdrop-blur-lg">
-                {siteConfig.navigation.map((item, index) => (
-                  <a
-                    key={item.href}
+      {/* Mobile full-screen menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="fixed inset-0 z-40 flex flex-col justify-between bg-bg px-4 pb-10 pt-28 sm:px-8 lg:hidden"
+            initial={{ clipPath: 'circle(0% at calc(100% - 3rem) 2.5rem)' }}
+            animate={{ clipPath: 'circle(150% at calc(100% - 3rem) 2.5rem)' }}
+            exit={{ clipPath: 'circle(0% at calc(100% - 3rem) 2.5rem)' }}
+            transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+          >
+            <nav className="flex flex-col" aria-label="Mobile">
+              {links.map((item, i) => (
+                <div key={item.href} className="overflow-hidden border-b border-line">
+                  <motion.a
                     href={item.href}
                     onClick={(e) => {
                       e.preventDefault();
-                      scrollToSection(item.href);
+                      go(item.href);
                     }}
-                    className="block w-full text-left px-4 py-3 text-sm font-semibold text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/10 rounded-lg transition-all duration-200 border border-transparent hover:border-cyan-500/30 cursor-pointer"
+                    className="flex items-baseline justify-between py-3"
+                    initial={{ y: '100%' }}
+                    animate={{ y: 0 }}
+                    transition={{ delay: 0.25 + i * 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      {item.label}
-                    </motion.div>
-                  </a>
-                ))}
-                <motion.div
-                  className="pt-4 border-t border-slate-700/50"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <a
-                    href="#contact"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection('#contact');
-                    }}
-                    className="block w-full px-4 py-3 bg-gradient-to-r from-cyan-500 via-violet-500 to-cyan-500 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all text-sm text-center cursor-pointer"
-                  >
-                    Get In Touch
-                  </a>
-                </motion.div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+                    <span className="font-display-tight text-5xl sm:text-6xl">{item.label}</span>
+                    <span className="font-mono text-xs text-faint">0{i + 1}</span>
+                  </motion.a>
+                </div>
+              ))}
+            </nav>
 
-      {/* Scroll Indicator */}
-      {isScrolled && (
-        <motion.div
-          className="h-1 bg-gradient-to-r from-cyan-500 via-violet-500 to-cyan-500"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 0.5 }}
-          style={{ originX: 0 }}
-        />
-      )}
-    </motion.nav>
+            <motion.div
+              className="flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs uppercase tracking-widest text-muted"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              {Object.entries(siteConfig.socialLinks).map(([platform, url]) => (
+                <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="hover:text-fg">
+                  {platform}
+                </a>
+              ))}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };

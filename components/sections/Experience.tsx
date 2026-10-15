@@ -1,144 +1,127 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion';
+import { useRef, useState } from 'react';
 import { experiences } from '@/config/experience';
-import { containerVariants, fadeInLeft, fadeInRight } from '@/lib/animations';
-import { Badge } from '@/components/ui/Badge';
+import { Eyebrow, SplitReveal } from '@/components/motion/primitives';
 
 export const Experience: React.FC = () => {
+  const listRef = useRef<HTMLOListElement>(null);
+  const [open, setOpen] = useState<string | null>(experiences[0]?.id ?? null);
+
+  // The rail on the left fills in as the list scrolls through the viewport.
+  const { scrollYProgress } = useScroll({ target: listRef, offset: ['start 0.75', 'end 0.6'] });
+  const rail = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
+
   return (
-    <section id="experience" className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 -z-10">
-        <motion.div
-          className="absolute top-1/2 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"
-          animate={{ y: [0, -100, 0] }}
-          transition={{ duration: 12, repeat: Infinity }}
-        />
-      </div>
-
-      <div className="max-w-4xl mx-auto">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            <span className="gradient-text">Experience & Journey</span>
-          </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            A timeline of my professional journey building innovative digital solutions
+    <section id="experience" className="relative py-20 sm:py-28 lg:py-36">
+      <div className="shell">
+        <div className="mb-16 grid gap-6 lg:grid-cols-2 lg:items-end">
+          <div>
+            <Eyebrow index="04">Experience</Eyebrow>
+            <SplitReveal as="h2" text="The journey so far" className="font-display-tight text-[clamp(3rem,8vw,8rem)]" />
+          </div>
+          <p className="max-w-md text-muted lg:justify-self-end">
+            Product teams I&apos;ve built with, what I owned, and what came out of it. Tap a role
+            for the detail.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Timeline */}
-        <motion.div
-          className="relative"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {/* Center line */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-cyan-500/50 via-violet-500/50 to-cyan-500/50" />
+        <ol ref={listRef} className="relative border-b border-line pl-6 sm:pl-10">
+          {/* Rail */}
+          <span className="absolute bottom-0 left-0 top-0 w-px bg-line" aria-hidden="true" />
+          <motion.span
+            className="absolute left-0 top-0 h-full w-px origin-top bg-accent"
+            style={{ scaleY: rail }}
+            aria-hidden="true"
+          />
 
-          {/* Timeline items */}
-          {experiences.map((exp, index) => (
-            <motion.div
-              key={exp.id}
-              className="mb-12 md:mb-16"
-              variants={index % 2 === 0 ? fadeInLeft : fadeInRight}
-            >
-              <div className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                {/* Content */}
-                <div className="w-full md:w-1/2">
-                  <motion.div
-                    className="glass-effect-dark p-8 rounded-lg hover:shadow-lg hover:shadow-cyan-500/20 transition-all"
-                    whileHover={{ y: -5 }}
+          {experiences.map((exp, i) => {
+            const isOpen = open === exp.id;
+            return (
+              <motion.li
+                key={exp.id}
+                className="relative border-t border-line"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-10% 0px' }}
+                transition={{ duration: 0.8, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <span
+                  className={`absolute -left-6 top-9 h-2.5 w-2.5 -translate-x-1/2 rounded-full border transition-colors duration-500 sm:-left-10 ${
+                    isOpen ? 'border-accent bg-accent' : 'border-line-strong bg-bg'
+                  }`}
+                  aria-hidden="true"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setOpen(isOpen ? null : exp.id)}
+                  className="group grid w-full gap-2 py-7 text-left sm:grid-cols-[180px_1fr_auto] sm:items-center sm:gap-8"
+                  aria-expanded={isOpen}
+                  aria-controls={`exp-${exp.id}`}
+                >
+                  <span className="font-mono text-xs uppercase tracking-[0.15em] text-faint">
+                    {exp.startDate} — {exp.endDate}
+                  </span>
+                  <span>
+                    <span className="block font-display text-3xl font-bold tracking-tight transition-transform duration-500 group-hover:translate-x-2 sm:text-5xl">
+                      {exp.company}
+                    </span>
+                    <span className="mt-1 block text-muted">{exp.position}</span>
+                  </span>
+                  <span
+                    className={`hidden h-12 w-12 items-center justify-center rounded-full border text-xl transition-all duration-500 sm:flex ${
+                      isOpen
+                        ? 'rotate-45 border-accent bg-accent text-on-accent'
+                        : 'border-line-strong group-hover:border-fg'
+                    }`}
+                    aria-hidden="true"
                   >
-                    {/* Company & Position */}
-                    <h3 className="text-2xl font-bold text-slate-100 mb-1">{exp.position}</h3>
-                    <p className="text-cyan-400 font-semibold mb-2">{exp.company}</p>
+                    +
+                  </span>
+                </button>
 
-                    {/* Date Range */}
-                    <p className="text-sm text-slate-400 mb-4">
-                      {exp.startDate} — {exp.endDate}
-                    </p>
-
-                    {/* Description */}
-                    <p className="text-slate-300 mb-4">{exp.description}</p>
-
-                    {/* Technologies */}
-                    <div className="mb-4">
-                      <h4 className="text-sm font-semibold text-slate-200 mb-2">Technologies:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {exp.technologies.map((tech) => (
-                          <Badge key={tech} variant="primary" size="sm">
-                            {tech}
-                          </Badge>
-                        ))}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      id={`exp-${exp.id}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="grid gap-8 pb-9 sm:grid-cols-[180px_1fr] sm:gap-8">
+                        <div className="flex flex-wrap content-start gap-1.5">
+                          {exp.technologies.map((tech) => (
+                            <span
+                              key={tech}
+                              className="rounded-full border border-line px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-muted"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                        <div>
+                          <p className="mb-5 max-w-2xl text-lg text-fg">{exp.description}</p>
+                          <ul className="grid gap-x-8 gap-y-2.5 md:grid-cols-2">
+                            {exp.achievements.map((item) => (
+                              <li key={item} className="flex gap-3 text-sm text-muted">
+                                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Achievements */}
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-200 mb-2">Key Achievements:</h4>
-                      <ul className="space-y-2">
-                        {exp.achievements.map((achievement, idx) => (
-                          <motion.li
-                            key={idx}
-                            className="flex items-start gap-2 text-slate-400 text-sm"
-                            initial={{ opacity: 0, x: -10 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: idx * 0.1 }}
-                          >
-                            <span className="text-cyan-400 mt-1 flex-shrink-0">✓</span>
-                            <span>{achievement}</span>
-                          </motion.li>
-                        ))}
-                      </ul>
-                    </div>
-                  </motion.div>
-                </div>
-
-                {/* Timeline dot */}
-                <div className="hidden md:flex w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-violet-400 items-center justify-center flex-shrink-0 z-10 glow-cyan">
-                  <motion.div
-                    className="w-4 h-4 rounded-full bg-slate-950"
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                </div>
-
-                {/* Spacer for layout */}
-                <div className="w-full md:w-1/2" />
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Call to action */}
-        <motion.div
-          className="text-center mt-16 p-8 glass-effect-dark rounded-lg"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <p className="text-slate-300 text-lg mb-4">
-            Interested in working together? Let&apos;s connect and create something amazing!
-          </p>
-          <motion.a
-            href="#contact"
-            className="inline-block px-8 py-3 bg-gradient-to-r from-cyan-500 to-violet-500 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Get In Touch
-          </motion.a>
-        </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );

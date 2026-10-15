@@ -1,3 +1,5 @@
+import { getLenis } from './lenis';
+
 export const clsx = (...classes: (string | undefined | null | false)[]): string => {
   return classes.filter(Boolean).join(' ');
 };
@@ -17,13 +19,22 @@ export const prefersReducedMotion = (): boolean =>
 export const scrollBehavior = (): ScrollBehavior =>
   prefersReducedMotion() ? 'auto' : 'smooth';
 
+/** Scrolls to a section id, or to the top for an empty id. Uses Lenis when it is running. */
 export const smoothScroll = (elementId: string) => {
-  const element = document.getElementById(elementId);
+  const lenis = getLenis();
+  const element = elementId ? document.getElementById(elementId) : null;
+
+  if (elementId && !element) return;
+
+  if (lenis) {
+    lenis.scrollTo(element ?? 0, { duration: 1.4 });
+    return;
+  }
+
   if (element) {
-    element.scrollIntoView({
-      behavior: scrollBehavior(),
-      block: 'start',
-    });
+    element.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
+  } else {
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   }
 };
 

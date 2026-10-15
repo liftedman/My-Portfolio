@@ -1,203 +1,79 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { skillCategories } from '@/config/skills';
-import { containerVariants, fadeInUp } from '@/lib/animations';
+import { skillCategories, skills, type Skill } from '@/config/skills';
+import { Eyebrow, SplitReveal } from '@/components/motion/primitives';
 
-interface SkillIconProps {
-  name: string;
-  category: string;
-  level: 'expert' | 'intermediate' | 'beginner';
-}
+const LEVELS: Record<Skill['level'], number> = { beginner: 1, intermediate: 2, expert: 3 };
 
-const SkillIcon: React.FC<SkillIconProps> = ({ name, category, level }) => {
-  const getIcon = (name: string) => {
-    const iconMap: { [key: string]: string } = {
-      Dart: '🎯',
-      JavaScript: '⚡',
-      TypeScript: '📘',
-      SQL: '🗄️',
-      Flutter: '📱',
-      React: '⚛️',
-      'Next.js': '▲',
-      'Node.js': '🟢',
-      Firebase: '🔥',
-      Supabase: '🐘',
-      MySQL: '🐬',
-      MongoDB: '🍃',
-      'Google Cloud': '☁️',
-      Git: '🌳',
-      Docker: '🐳',
-      Figma: '🎨',
-    };
-    return iconMap[name] || '✨';
-  };
-
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'expert':
-        return 'from-cyan-400 to-green-400';
-      case 'intermediate':
-        return 'from-violet-400 to-cyan-400';
-      default:
-        return 'from-slate-400 to-slate-500';
-    }
-  };
-
+/** Three-segment proficiency meter. */
+function LevelMeter({ level }: { level: Skill['level'] }) {
+  const filled = LEVELS[level];
   return (
-    <motion.div
-      whileHover={{ scale: 1.15, rotate: 10 }}
-      whileTap={{ scale: 0.95 }}
-      className="flex flex-col items-center"
-    >
-      <motion.div
-        className={`w-16 h-16 rounded-lg bg-gradient-to-br ${getLevelColor(level)} p-3 flex items-center justify-center text-3xl glow-cyan mb-2 cursor-pointer`}
-        animate={{
-          boxShadow: level === 'expert' ? ['0 0 20px rgba(6, 182, 212, 0.5)', '0 0 40px rgba(6, 182, 212, 0.8)', '0 0 20px rgba(6, 182, 212, 0.5)'] : 'none',
-        }}
-        transition={{
-          duration: 2,
-          repeat: level === 'expert' ? Infinity : 0,
-        }}
-      >
-        {getIcon(name)}
-      </motion.div>
-      <p className="text-sm font-semibold text-slate-200 text-center">{name}</p>
-      <p className="text-xs text-slate-400">{level}</p>
-    </motion.div>
+    <span className="flex items-center gap-1" aria-label={`${level} level`} title={level}>
+      {[1, 2, 3].map((n) => (
+        <span
+          key={n}
+          className={`h-1.5 w-4 rounded-full transition-colors duration-500 ${
+            n <= filled ? 'bg-accent' : 'bg-line-strong'
+          }`}
+        />
+      ))}
+    </span>
   );
-};
+}
 
 export const Skills: React.FC = () => {
   return (
-    <section id="skills" className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 -z-10">
-        <motion.div
-          className="absolute top-1/3 -left-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"
-          animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
-          transition={{ duration: 12, repeat: Infinity }}
-        />
-      </div>
-
-      <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            <span className="gradient-text">Technical Skills</span>
-          </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            A comprehensive toolkit of technologies and frameworks I use to build exceptional digital
-            experiences
+    <section id="skills" className="relative py-20 sm:py-28 lg:py-36">
+      <div className="shell">
+        <div className="mb-14 grid gap-6 lg:grid-cols-2 lg:items-end">
+          <div>
+            <Eyebrow index="03">Skills</Eyebrow>
+            <SplitReveal as="h2" text="The toolkit" className="font-display-tight text-[clamp(3rem,8vw,8rem)]" />
+          </div>
+          <p className="max-w-md text-muted lg:justify-self-end">
+            Languages, frameworks and services I ship with day to day. Three bars means I&apos;d
+            lead with it; two means I use it comfortably in production.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Skills Grid by Category */}
-        <motion.div
-          className="space-y-12"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {skillCategories.map((category) => (
-            <motion.div key={category} variants={fadeInUp} className="flex flex-col items-center">
-              <h3 className="text-2xl font-bold text-slate-100 mb-8 text-center gradient-text">
-                {category}
-              </h3>
-
-                    <div className="flex flex-wrap justify-center gap-35 mx-auto max-w-5xl">
-                {/* Dynamically render skills - this would normally come from config */}
-                {[
-                  { name: 'Dart', level: 'expert' as const },
-                  { name: 'JavaScript', level: 'expert' as const },
-                  { name: 'TypeScript', level: 'intermediate' as const },
-                  { name: 'SQL', level: 'intermediate' as const },
-                  { name: 'Flutter', level: 'expert' as const },
-                  { name: 'React', level: 'expert' as const },
-                  { name: 'Next.js', level: 'intermediate' as const },
-                  { name: 'Node.js', level: 'intermediate' as const },
-                  { name: 'Firebase', level: 'expert' as const },
-                  { name: 'Supabase', level: 'intermediate' as const },
-                  { name: 'MySQL', level: 'intermediate' as const },
-                  { name: 'MongoDB', level: 'intermediate' as const },
-                  { name: 'Google Cloud', level: 'intermediate' as const },
-                  { name: 'Git', level: 'expert' as const },
-                  { name: 'Docker', level: 'intermediate' as const },
-                  { name: 'Figma', level: 'intermediate' as const },
-                ]
-                  .filter((skill) => {
-                    if (category === 'Languages') {
-                      return ['Dart', 'JavaScript', 'TypeScript', 'SQL'].includes(skill.name);
-                    }
-                    if (category === 'Frameworks') {
-                      return ['Flutter', 'React', 'Next.js', 'Node.js'].includes(skill.name);
-                    }
-                    if (category === 'Databases') {
-                      return ['Firebase', 'Supabase', 'MySQL', 'MongoDB'].includes(skill.name);
-                    }
-                    if (category === 'Cloud & Tools') {
-                      return ['Google Cloud', 'Git', 'Docker', 'Figma'].includes(skill.name);
-                    }
-                    return false;
-                  })
-                  .map((skill) => (
-                    <motion.div
-                      key={skill.name}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <SkillIcon
-                        name={skill.name}
-                        category={category}
-                        level={skill.level}
-                      />
-                    </motion.div>
-                  ))}
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {skillCategories.map((category, ci) => (
+            <motion.div
+              key={category}
+              className="liquid-glass spotlight glass-rim rounded-3xl p-7"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-10% 0px' }}
+              transition={{ duration: 0.8, delay: ci * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="relative mb-6 flex items-center justify-between">
+                <h3 className="font-display text-xl font-bold">{category}</h3>
+                <span className="font-mono text-xs text-faint">0{ci + 1}</span>
               </div>
+              <ul className="relative">
+                {skills
+                  .filter((skill) => skill.category === category)
+                  .map((skill, si) => (
+                    <motion.li
+                      key={skill.name}
+                      className="group flex items-center justify-between border-t border-line py-3.5"
+                      initial={{ opacity: 0, x: -12 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.2 + ci * 0.08 + si * 0.05 }}
+                    >
+                      <span className="font-medium transition-transform duration-300 group-hover:translate-x-1.5">
+                        {skill.name}
+                      </span>
+                      <LevelMeter level={skill.level} />
+                    </motion.li>
+                  ))}
+              </ul>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* Legend */}
-        <motion.div
-          className="mt-16 p-8 glass-effect-dark rounded-lg"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <h4 className="text-lg font-semibold text-slate-200 mb-4 text-center">Proficiency Legend</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 place-items-center">
-            <div className="flex items-center gap-3 justify-center">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-400 to-green-400 glow-cyan" />
-              <div>
-                <p className="font-semibold text-slate-200">Expert</p>
-                <p className="text-sm text-slate-400">Advanced proficiency</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 justify-center">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-violet-400 to-cyan-400" />
-              <div>
-                <p className="font-semibold text-slate-200">Intermediate</p>
-                <p className="text-sm text-slate-400">Good working knowledge</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 justify-center">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-slate-400 to-slate-500" />
-              <div>
-                <p className="font-semibold text-slate-200">Beginner</p>
-                <p className="text-sm text-slate-400">Learning & growing</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

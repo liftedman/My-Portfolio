@@ -1,98 +1,105 @@
 'use client';
 
-import { useMousePosition, useCursorFollower } from '@/hooks/useMousePosition';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion, useMotionValue, useSpring } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
+/**
+ * A precise dot plus a trailing ring. The ring swells over anything clickable,
+ * and over elements with `data-cursor="Label"` it becomes a filled disc with
+ * that label inside.
+ */
 export const CustomCursor: React.FC = () => {
-  const mousePosition = useMousePosition();
-  const [isVisible, setIsVisible] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [hovering, setHovering] = useState(false);
+  const [label, setLabel] = useState<string | null>(null);
+  const [pressed, setPressed] = useState(false);
 
-  // Only for pointer devices, and only when motion is welcome: with reduced
-  // motion the trailing spring is disabled, so the cursor would jump instead
-  // of follow — worse than leaving the native cursor alone.
+  const x = useMotionValue(-100);
+  const y = useMotionValue(-100);
+  const ringX = useSpring(x, { stiffness: 260, damping: 26, mass: 0.6 });
+  const ringY = useSpring(y, { stiffness: 260, damping: 26, mass: 0.6 });
+
+  // Only for mouse users who welcome motion; otherwise the native cursor stays.
   useEffect(() => {
     const finePointer = window.matchMedia('(pointer: fine)').matches;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    setIsEnabled(finePointer && !reducedMotion);
+    setEnabled(finePointer && !reducedMotion);
   }, []);
 
   useEffect(() => {
-    const handleMouseEnter = () => setIsVisible(true);
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const isClickable =
-        target.tagName === 'BUTTON' ||
-        target.tagName === 'A' ||
-        target.classList.contains('cursor-pointer');
-      setIsHovering(isClickable);
-    };
+    if (!enabled) return;
+    const root = document.documentElement;
+    root.classList.add('use-custom-cursor');
 
-    window.addEventListener('mouseenter', handleMouseEnter);
-    window.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('mouseover', handleMouseOver);
+    const onMove = (e: PointerEvent) => {
+      x.set(e.clientX);
+      y.set(e.clientY);
+      setVisible(true);
+
+      const target = e.target as HTMLElement;
+      const labelled = target.closest<HTMLElement>('[data-cursor]');
+      setLabel(labelled?.dataset.cursor ?? null);
+      setHovering(!!target.closest('a, button, [role="button"], input, textarea, label, select'));
+    };
+    const onLeave = () => setVisible(false);
+    const onDown = () => setPressed(true);
+    const onUp = () => setPressed(false);
+
+    window.addEventListener('pointermove', onMove, { passive: true });
+    document.addEventListener('pointerleave', onLeave);
+    window.addEventListener('pointerdown', onDown);
+    window.addEventListener('pointerup', onUp);
 
     return () => {
-      window.removeEventListener('mouseenter', handleMouseEnter);
-      window.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('mouseover', handleMouseOver);
+      root.classList.remove('use-custom-cursor');
+      window.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerleave', onLeave);
+      window.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('pointerup', onUp);
     };
-  }, []);
+  }, [enabled, x, y]);
 
-  if (!isEnabled || !isVisible) return null;
+  if (!enabled) return null;
+
+  const ringSize = label ? 96 : hovering ? 56 : 34;
 
   return (
-    <>
-      {/* Main cursor dot */}
+    <div className="pointer-events-none fixed inset-0 z-[9999]" aria-hidden="true">
       <motion.div
-        className="fixed w-3 h-3 bg-gradient-to-r from-cyan-400 to-violet-400 rounded-full pointer-events-none z-[9999]"
-        animate={{
-          x: mousePosition.x - 6,
-          y: mousePosition.y - 6,
-        }}
-        transition={{
-          type: 'spring',
-          stiffness: 500,
-          damping: 28,
-          mass: 0.5,
-        }}
+        className="absolute left-0 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent"
+        style={{ x, y }}
+        animate={{ opacity: visible && !label ? 1 : 0, scale: pressed ? 0.5 : 1 }}
+        transition={{ duration: 0.15 }}
       />
-
-      {/* Outer ring */}
       <motion.div
-        className="fixed w-8 h-8 border-2 border-cyan-400 rounded-full pointer-events-none z-[9998]"
+        className={`absolute left-0 top-0 flex items-center justify-center rounded-full border transition-colors duration-300 ${
+          label ? 'border-accent bg-accent' : hovering ? 'border-accent' : 'border-fg/30'
+        }`}
+        style={{ x: ringX, y: ringY, translateX: '-50%', translateY: '-50%' }}
         animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
-          scale: isHovering ? 1.5 : 1,
-          borderColor: isHovering ? '#06b6d4' : '#06b6d4',
+          width: ringSize,
+          height: ringSize,
+          opacity: visible ? 1 : 0,
+          scale: pressed ? 0.85 : 1,
         }}
-        transition={{
-          type: 'spring',
-          stiffness: 200,
-          damping: 15,
-          mass: 0.5,
-        }}
-      />
-
-      {/* Glow effect on hover */}
-      {isHovering && (
-        <motion.div
-          className="fixed w-12 h-12 border-2 border-cyan-400/30 rounded-full pointer-events-none z-[9997]"
-          animate={{
-            x: mousePosition.x - 24,
-            y: mousePosition.y - 24,
-          }}
-          transition={{
-            type: 'spring',
-            stiffness: 100,
-            damping: 20,
-          }}
-        />
-      )}
-    </>
+        transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+      >
+        <AnimatePresence>
+          {label && (
+            <motion.span
+              key={label}
+              className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-on-accent"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.2 }}
+            >
+              {label}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
   );
 };
