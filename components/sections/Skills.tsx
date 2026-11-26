@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { skillCategories, skills, type Skill } from '@/config/skills';
+import type { Skill } from '@/config/skills';
+import { useContent } from '@/contexts/ContentContext';
 import { Eyebrow, SplitReveal } from '@/components/motion/primitives';
 
 const LEVELS: Record<Skill['level'], number> = { beginner: 1, intermediate: 2, expert: 3 };
@@ -24,6 +25,7 @@ function LevelMeter({ level }: { level: Skill['level'] }) {
 }
 
 export const Skills: React.FC = () => {
+  const { skills, skillCategories } = useContent();
   return (
     <section id="skills" className="relative py-20 sm:py-28 lg:py-36">
       <div className="shell">

@@ -3,17 +3,18 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { siteConfig } from '@/config/constants';
+import { useContent, useNavLinks } from '@/contexts/ContentContext';
 import { getLenis } from '@/lib/lenis';
 import { smoothScroll } from '@/lib/utils';
 import { useIntro } from '@/contexts/IntroContext';
 import { Magnetic } from '@/components/motion/primitives';
 import { ThemeToggle } from './ThemeToggle';
 
-const links = siteConfig.navigation.filter((item) => item.href.startsWith('#'));
 
 export const Navbar: React.FC = () => {
   const { ready } = useIntro();
+  const { settings } = useContent();
+  const links = useNavLinks();
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -43,7 +44,7 @@ export const Navbar: React.FC = () => {
     );
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+  }, [links]);
 
   // Freeze the page behind the full-screen mobile menu.
   useEffect(() => {
@@ -201,7 +202,7 @@ export const Navbar: React.FC = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              {Object.entries(siteConfig.socialLinks).map(([platform, url]) => (
+              {settings.socialLinks.map(({ platform, url }) => (
                 <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="hover:text-fg">
                   {platform}
                 </a>

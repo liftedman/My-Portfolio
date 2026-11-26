@@ -2,6 +2,7 @@
 
 import { animate, motion, useInView } from 'framer-motion';
 import Image from 'next/image';
+import { useContent } from '@/contexts/ContentContext';
 import { useEffect, useRef, useState } from 'react';
 import { Arrow, Eyebrow, FadeIn, ScrollText, TiltCard } from '@/components/motion/primitives';
 
@@ -59,6 +60,7 @@ function CountUp({ value, suffix }: { value: number; suffix: string }) {
 }
 
 export const About: React.FC = () => {
+  const { settings } = useContent();
   return (
     <section id="about" className="relative py-20 sm:py-28 lg:py-36">
       <div className="shell">
@@ -76,7 +78,7 @@ export const About: React.FC = () => {
               <div className="liquid-glass shine-on-hover overflow-hidden rounded-[2rem] p-3">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem]">
                   <Image
-                    src="/images/profile.jpeg"
+                    src={settings.profilePhoto}
                     alt="Portrait of Gbeminiyi Akinfala"
                     fill
                     sizes="(max-width: 1024px) 90vw, 440px"

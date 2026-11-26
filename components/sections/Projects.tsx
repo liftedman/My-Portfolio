@@ -4,8 +4,8 @@ import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { projects, type Project } from '@/config/projects';
-import { siteConfig } from '@/config/constants';
+import type { Project } from '@/config/projects';
+import { useContent } from '@/contexts/ContentContext';
 import { Arrow, Eyebrow, Magnetic, SplitReveal, TiltCard } from '@/components/motion/primitives';
 
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
@@ -23,7 +23,7 @@ function StatusChip({ project }: { project: Project }) {
   );
 }
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ project, index, total }: { project: Project; index: number; total: number }) {
   return (
     <article className="group w-full shrink-0 lg:w-[min(62vw,960px)]">
       <Link href={`/projects/${project.id}`} data-cursor="View" aria-label={`${project.title} case study`}>
@@ -41,7 +41,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
             <div className="tilt-pop-sm absolute left-5 right-5 top-5 flex items-center justify-between">
               <span className="font-mono text-xs text-white/80">
-                {pad(index + 1)} / {pad(projects.length)}
+                {pad(index + 1)} / {pad(total)}
               </span>
               <StatusChip project={project} />
             </div>
@@ -114,12 +114,13 @@ function Intro() {
   );
 }
 
-function Outro() {
+function Outro({ githubUrl }: { githubUrl?: string }) {
+  if (!githubUrl) return null;
   return (
     <div className="flex w-full shrink-0 items-center justify-center py-10 lg:w-[min(30vw,440px)]">
       <Magnetic strength={0.25}>
         <a
-          href={siteConfig.socialLinks.github}
+          href={githubUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex h-56 w-56 flex-col items-center justify-center rounded-full border border-line-strong text-center transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-on-accent sm:h-64 sm:w-64"
@@ -135,6 +136,8 @@ function Outro() {
 }
 
 export const Projects: React.FC = () => {
+  const { projects, settings } = useContent();
+  const githubUrl = settings.socialLinks.find((l) => /github/i.test(`${l.platform} ${l.url}`))?.url;
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -185,10 +188,10 @@ export const Projects: React.FC = () => {
               viewport={{ once: true, margin: '-10% 0px' }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
-              <ProjectCard project={project} index={i} />
+              <ProjectCard project={project} index={i} total={projects.length} />
             </motion.div>
           ))}
-          <Outro />
+          <Outro githubUrl={githubUrl} />
         </div>
       </section>
     );
@@ -210,9 +213,9 @@ export const Projects: React.FC = () => {
         >
           <Intro />
           {projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+            <ProjectCard key={project.id} project={project} index={i} total={projects.length} />
           ))}
-          <Outro />
+          <Outro githubUrl={githubUrl} />
         </motion.div>
 
         {/* Progress */}

@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import Image from 'next/image';
+import { useContent } from '@/contexts/ContentContext';
 import { useEffect, useRef, useState } from 'react';
 import { useIntro } from '@/contexts/IntroContext';
 import { Arrow, Magnetic } from '@/components/motion/primitives';
@@ -38,6 +39,7 @@ function Line({
 
 export const Hero: React.FC = () => {
   const { ready } = useIntro();
+  const { settings } = useContent();
   const sectionRef = useRef<HTMLElement>(null);
   const [roleIndex, setRoleIndex] = useState(0);
 
@@ -110,7 +112,7 @@ export const Hero: React.FC = () => {
               transition={{ duration: 1, ease: EASE, delay: 0.5 }}
             >
               <Image
-                src="/images/profile.jpeg"
+                src={settings.profilePhoto}
                 alt="Gbeminiyi Akinfala"
                 fill
                 priority
@@ -159,7 +161,7 @@ export const Hero: React.FC = () => {
               </Magnetic>
               <Magnetic>
                 <a
-                  href="/documents/flutter_dev.pdf"
+                  href={settings.resumeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-pill"

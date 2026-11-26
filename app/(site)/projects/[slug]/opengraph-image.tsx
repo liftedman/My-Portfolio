@@ -1,17 +1,21 @@
 import { ImageResponse } from 'next/og';
-import { projects } from '@/config/projects';
+import { getSiteContent } from '@/lib/content';
 import { siteConfig } from '@/config/constants';
 
 export const alt = 'Project case study';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-export function generateStaticParams() {
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const { projects } = await getSiteContent();
   return projects.map((project) => ({ slug: project.id }));
 }
 
 export default async function OgImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const { projects } = await getSiteContent();
   const project = projects.find((p) => p.id === slug);
 
   return new ImageResponse(

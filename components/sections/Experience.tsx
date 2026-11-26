@@ -2,10 +2,11 @@
 
 import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { experiences } from '@/config/experience';
+import { useContent } from '@/contexts/ContentContext';
 import { Eyebrow, SplitReveal } from '@/components/motion/primitives';
 
 export const Experience: React.FC = () => {
+  const { experiences } = useContent();
   const listRef = useRef<HTMLOListElement>(null);
   const [open, setOpen] = useState<string | null>(experiences[0]?.id ?? null);
 
