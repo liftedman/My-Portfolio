@@ -4,26 +4,34 @@ export const project = defineType({
   name: 'project',
   title: 'Project',
   type: 'document',
-  groups: [
-    { name: 'basics', title: 'Basics', default: true },
-    { name: 'media', title: 'Images' },
-    { name: 'details', title: 'Details' },
-    { name: 'caseStudy', title: 'Case study' },
-  ],
   fields: [
     defineField({
       name: 'title',
       title: 'Project name',
       type: 'string',
-      group: 'basics',
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'mainImage',
+      title: 'Cover image',
+      description: 'The big image on the project card. Landscape works best (16:10).',
+      type: 'image',
+      options: { hotspot: true },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'More screenshots',
+      description: 'Shown on the case study page. Drag to reorder.',
+      type: 'array',
+      of: [defineArrayMember({ type: 'image', options: { hotspot: true } })],
+      options: { layout: 'grid' },
     }),
     defineField({
       name: 'slug',
       title: 'Page address',
       description: 'Used in the link: yoursite.com/projects/<this>. Click "Generate" to make it from the name.',
       type: 'slug',
-      group: 'basics',
       options: { source: 'title', maxLength: 64 },
       validation: (rule) => rule.required(),
     }),
@@ -32,14 +40,12 @@ export const project = defineType({
       title: 'One-line summary',
       description: 'Shown under the project card. Keep it to one sentence.',
       type: 'string',
-      group: 'basics',
       validation: (rule) => rule.required().max(140),
     }),
     defineField({
       name: 'status',
       title: 'Status',
       type: 'string',
-      group: 'basics',
       options: {
         list: [
           { title: 'Live — people can visit it', value: 'live' },
@@ -56,7 +62,6 @@ export const project = defineType({
       title: 'Live website / app link',
       description: 'Only shown when the status is "Live".',
       type: 'url',
-      group: 'basics',
       hidden: ({ parent }) => parent?.status !== 'live',
     }),
     defineField({
@@ -65,48 +70,25 @@ export const project = defineType({
       description: 'A short, honest note shown instead of a link, e.g. "The client retired this deployment in 2025."',
       type: 'text',
       rows: 3,
-      group: 'basics',
       hidden: ({ parent }) => parent?.status === 'live',
     }),
     defineField({
       name: 'github',
       title: 'GitHub link (optional)',
       type: 'url',
-      group: 'basics',
     }),
     defineField({
       name: 'order',
       title: 'Position',
       description: '1 shows first, 2 second, and so on.',
       type: 'number',
-      group: 'basics',
       initialValue: 99,
-    }),
-
-    defineField({
-      name: 'mainImage',
-      title: 'Cover image',
-      description: 'The big image on the project card. Landscape works best (16:10).',
-      type: 'image',
-      group: 'media',
-      options: { hotspot: true },
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: 'gallery',
-      title: 'More screenshots',
-      description: 'Shown on the case study page. Drag to reorder.',
-      type: 'array',
-      group: 'media',
-      of: [defineArrayMember({ type: 'image', options: { hotspot: true } })],
-      options: { layout: 'grid' },
     }),
 
     defineField({
       name: 'category',
       title: 'Category',
       type: 'string',
-      group: 'details',
       options: {
         list: [
           { title: 'Mobile', value: 'mobile' },
@@ -124,7 +106,6 @@ export const project = defineType({
       name: 'year',
       title: 'Year',
       type: 'number',
-      group: 'details',
       initialValue: () => new Date().getFullYear(),
       validation: (rule) => rule.required().min(2000).max(2100),
     }),
@@ -133,7 +114,6 @@ export const project = defineType({
       title: 'Your role',
       description: 'e.g. "Full-Stack Developer"',
       type: 'string',
-      group: 'details',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -142,7 +122,6 @@ export const project = defineType({
       description: 'A short paragraph about the project.',
       type: 'text',
       rows: 5,
-      group: 'details',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -150,7 +129,6 @@ export const project = defineType({
       title: 'Technologies',
       description: 'Type one and press Enter.',
       type: 'array',
-      group: 'details',
       of: [defineArrayMember({ type: 'string' })],
       options: { layout: 'tags' },
     }),
@@ -159,7 +137,6 @@ export const project = defineType({
       title: 'Key highlights',
       description: 'One point per line. A real number ("100+ users in month one") beats a feature.',
       type: 'array',
-      group: 'details',
       of: [defineArrayMember({ type: 'string' })],
     }),
 
@@ -168,7 +145,6 @@ export const project = defineType({
       title: 'Case study (all optional)',
       description: 'Each part only appears on the site when you fill it in.',
       type: 'object',
-      group: 'caseStudy',
       fields: [
         defineField({ name: 'problem', title: 'The problem', type: 'text', rows: 3 }),
         defineField({ name: 'constraints', title: 'Constraints', type: 'text', rows: 3 }),
