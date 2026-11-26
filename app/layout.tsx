@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Bricolage_Grotesque, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
-import { ClientProviders } from './ClientProviders';
 import { siteUrl } from '@/config/constants';
 
 const bricolage = Bricolage_Grotesque({
@@ -92,7 +91,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${bricolage.variable} ${inter.variable} ${jetbrains.variable} antialiased`}>
-        <ClientProviders>{children}</ClientProviders>
+        {children}
       </body>
     </html>
   );

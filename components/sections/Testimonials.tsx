@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { testimonials } from '@/config/testimonials';
+import { useContent, useSectionNumbers } from '@/contexts/ContentContext';
 import { getInitials } from '@/lib/utils';
 import { Eyebrow } from '@/components/motion/primitives';
 
@@ -10,14 +10,17 @@ const INTERVAL_MS = 7000;
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export const Testimonials: React.FC = () => {
+  const { testimonials } = useContent();
+  const numbers = useSectionNumbers();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (paused) return;
-    const id = setTimeout(() => setIndex((i) => (i + 1) % testimonials.length), INTERVAL_MS);
+    const count = testimonials.length;
+    if (paused || count < 2) return;
+    const id = setTimeout(() => setIndex((i) => (i + 1) % count), INTERVAL_MS);
     return () => clearTimeout(id);
-  }, [index, paused]);
+  }, [index, paused, testimonials.length]);
 
   if (testimonials.length === 0) return null;
 
@@ -33,7 +36,7 @@ export const Testimonials: React.FC = () => {
       onPointerLeave={() => setPaused(false)}
     >
       <div className="shell">
-        <Eyebrow index="05">Kind words</Eyebrow>
+        <Eyebrow index={numbers.testimonials}>Kind words</Eyebrow>
 
         <div className="liquid-glass relative overflow-hidden rounded-[2rem] px-6 py-12 sm:px-14 sm:py-16">
           <span

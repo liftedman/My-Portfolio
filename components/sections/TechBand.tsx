@@ -2,11 +2,12 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { skills } from '@/config/skills';
+import { useContent } from '@/contexts/ContentContext';
 import { Marquee } from '@/components/motion/primitives';
 
 /** Two crossed tickers of the stack between the hero and About. */
 export function TechBand() {
+  const { skills } = useContent();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const rotate = useTransform(scrollYProgress, [0, 1], [-4, 2]);

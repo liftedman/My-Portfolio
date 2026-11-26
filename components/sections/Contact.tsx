@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { siteConfig } from '@/config/constants';
+import { useContent, useSectionNumbers } from '@/contexts/ContentContext';
 import { Arrow, Eyebrow, FadeIn, Magnetic, Marquee } from '@/components/motion/primitives';
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
@@ -13,6 +13,8 @@ const labelClass =
   'pointer-events-none absolute left-0 top-6 font-mono text-xs uppercase tracking-[0.15em] text-faint transition-all duration-300 peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-accent-ink peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-[10px]';
 
 export const Contact: React.FC = () => {
+  const { settings } = useContent();
+  const numbers = useSectionNumbers();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<Status>('idle');
   const [copied, setCopied] = useState(false);
@@ -46,11 +48,11 @@ export const Contact: React.FC = () => {
 
   const copyEmail = async () => {
     try {
-      await navigator.clipboard.writeText(siteConfig.email);
+      await navigator.clipboard.writeText(settings.email);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      window.location.href = `mailto:${siteConfig.email}`;
+      window.location.href = `mailto:${settings.email}`;
     }
   };
 
@@ -71,7 +73,7 @@ export const Contact: React.FC = () => {
       <div className="shell grid gap-14 py-16 sm:py-24 lg:grid-cols-2 lg:gap-24">
         {/* Direct lines */}
         <div>
-          <Eyebrow index="06">Contact</Eyebrow>
+          <Eyebrow index={numbers.contact}>Contact</Eyebrow>
           <FadeIn>
             <h2 className="font-display text-[clamp(2.2rem,4.5vw,4rem)] font-bold leading-[1.05] tracking-tight">
               Have a project in mind? <span className="text-muted">I&apos;d love to hear about it.</span>
@@ -80,10 +82,10 @@ export const Contact: React.FC = () => {
 
           <FadeIn delay={0.1} className="mt-10 flex flex-wrap items-center gap-3">
             <a
-              href={`mailto:${siteConfig.email}`}
+              href={`mailto:${settings.email}`}
               className="group relative font-display text-xl font-semibold sm:text-2xl"
             >
-              {siteConfig.email}
+              {settings.email}
               <span className="absolute -bottom-1 left-0 h-px w-full origin-right scale-x-0 bg-accent transition-transform duration-500 group-hover:origin-left group-hover:scale-x-100" />
             </a>
             <button type="button" onClick={copyEmail} className="btn-pill px-4! py-2! text-[10px]!">
@@ -93,7 +95,7 @@ export const Contact: React.FC = () => {
 
           <FadeIn delay={0.2} className="mt-14">
             <ul className="border-b border-line">
-              {Object.entries(siteConfig.socialLinks).map(([platform, url]) => (
+              {settings.socialLinks.map(({ platform, url }) => (
                 <li key={platform} className="border-t border-line">
                   <a
                     href={url}

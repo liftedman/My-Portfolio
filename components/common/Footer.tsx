@@ -2,11 +2,13 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { siteConfig } from '@/config/constants';
+import { useContent, useNavLinks } from '@/contexts/ContentContext';
 import { smoothScroll } from '@/lib/utils';
 import { Magnetic } from '@/components/motion/primitives';
 
 export const Footer: React.FC = () => {
+  const { settings } = useContent();
+  const links = useNavLinks();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
   // The wordmark rises into place as the footer comes into view.
@@ -19,22 +21,20 @@ export const Footer: React.FC = () => {
           <div>
             <p className="eyebrow mb-4">Navigate</p>
             <ul className="space-y-2">
-              {siteConfig.navigation
-                .filter((item) => item.href.startsWith('#'))
-                .map((item) => (
-                  <li key={item.href}>
-                    <a href={item.href} className="text-muted transition-colors hover:text-fg">
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
+              {links.map((item) => (
+                <li key={item.href}>
+                  <a href={item.href} className="text-muted transition-colors hover:text-fg">
+                    {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
             <p className="eyebrow mb-4">Elsewhere</p>
             <ul className="space-y-2">
-              {Object.entries(siteConfig.socialLinks).map(([platform, url]) => (
+              {settings.socialLinks.map(({ platform, url }) => (
                 <li key={platform}>
                   <a
                     href={url}
@@ -50,8 +50,8 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="col-span-2 flex items-center justify-between gap-6 sm:col-span-1 sm:flex-col sm:items-end">
-            <a href={`mailto:${siteConfig.email}`} className="text-muted transition-colors hover:text-fg">
-              {siteConfig.email}
+            <a href={`mailto:${settings.email}`} className="text-muted transition-colors hover:text-fg">
+              {settings.email}
             </a>
             <Magnetic>
               <button

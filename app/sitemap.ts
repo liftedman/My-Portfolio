@@ -1,8 +1,11 @@
 import type { MetadataRoute } from 'next';
-import { projects } from '@/config/projects';
+import { getSiteContent } from '@/lib/content';
 import { siteUrl } from '@/config/constants';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const { projects } = await getSiteContent();
   const lastModified = new Date();
 
   return [

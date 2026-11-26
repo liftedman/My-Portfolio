@@ -2,13 +2,17 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { projects } from '@/config/projects';
+import { getSiteContent } from '@/lib/content';
 import { siteConfig, siteUrl } from '@/config/constants';
 import { Arrow } from '@/components/motion/primitives';
 
 type Params = { slug: string };
 
-export function generateStaticParams(): Params[] {
+// New projects added in the Studio get a page on first visit; edits refresh within a minute.
+export const revalidate = 60;
+
+export async function generateStaticParams(): Promise<Params[]> {
+  const { projects } = await getSiteContent();
   return projects.map((project) => ({ slug: project.id }));
 }
 
@@ -18,6 +22,7 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const { projects } = await getSiteContent();
   const project = projects.find((p) => p.id === slug);
 
   if (!project) {
@@ -62,6 +67,7 @@ export default async function ProjectCaseStudy({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
+  const { projects } = await getSiteContent();
   const project = projects.find((p) => p.id === slug);
 
   if (!project) {
